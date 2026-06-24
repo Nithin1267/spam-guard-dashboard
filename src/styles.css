@@ -895,3 +895,48 @@ body {
   .ss-theme-btn { padding: 6px; }
   .ss-theme-active { padding: 6px 10px; }
 }
+
+/* --------------------------- Theme transitions --------------------------- */
+
+html, body,
+.ss-bg, .ss-bg::before, .ss-bg-grid, .ss-bg-orb,
+.ss-card, .ss-stat, .ss-textarea, .ss-highlighted, .ss-explain,
+.ss-btn, .ss-btn-primary, .ss-btn-ghost,
+.ss-pill, .ss-themes, .ss-theme-btn, .ss-theme-swatch,
+.ss-chip, .ss-badge, .ss-list-item,
+.ss-verdict, .ss-meter, .ss-meter-fill,
+.ss-bd-row, .ss-total, .ss-mark, .ss-formula,
+.ss-brand-name, .ss-brand-sub, .ss-lead, .ss-muted,
+.ss-section-label, .ss-explain-subhead, .ss-count,
+.ss-list-preview, .ss-list-prob, .ss-list-ts, .ss-link,
+.ss-stat-label, .ss-stat-value, .ss-prob-num, .ss-prob-label,
+.ss-logo {
+  transition:
+    background 450ms cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 450ms cubic-bezier(0.4, 0, 0.2, 1),
+    background-image 450ms cubic-bezier(0.4, 0, 0.2, 1),
+    color 350ms cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 350ms cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 450ms cubic-bezier(0.4, 0, 0.2, 1),
+    fill 350ms cubic-bezier(0.4, 0, 0.2, 1),
+    stroke 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Preserve existing hover micro-interactions (transform-based) */
+.ss-btn { transition:
+    background 450ms cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 450ms cubic-bezier(0.4, 0, 0.2, 1),
+    background-image 450ms cubic-bezier(0.4, 0, 0.2, 1),
+    color 350ms cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 350ms cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 450ms cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.15s ease,
+    opacity 0.2s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html, body, .ss-bg, .ss-card, .ss-stat, .ss-textarea, .ss-btn,
+  .ss-themes, .ss-theme-btn, .ss-pill, .ss-chip, .ss-badge, .ss-verdict {
+    transition: none !important;
+  }
+}
