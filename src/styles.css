@@ -940,3 +940,37 @@ html, body,
     transition: none !important;
   }
 }
+
+/* ----------------------- Staggered theme transitions ---------------------- */
+/* Order: background (0ms) → cards/surfaces (60ms) → buttons (120ms) → chips/badges (180ms) → text (240ms) */
+
+html, body, .ss-bg, .ss-bg-grid, .ss-bg-orb {
+  transition-delay: 0ms;
+}
+
+.ss-card, .ss-stat, .ss-textarea, .ss-highlighted, .ss-explain,
+.ss-pill, .ss-themes, .ss-list-item, .ss-meter, .ss-total, .ss-bd-row {
+  transition-delay: 60ms;
+}
+
+.ss-btn, .ss-btn-primary, .ss-btn-ghost,
+.ss-theme-btn, .ss-theme-swatch, .ss-link, .ss-logo {
+  transition-delay: 120ms;
+}
+
+.ss-chip, .ss-badge, .ss-verdict, .ss-mark, .ss-formula,
+.ss-meter-fill, .ss-bd-bar-fill {
+  transition-delay: 180ms;
+}
+
+.ss-brand-name, .ss-brand-sub, .ss-lead, .ss-muted,
+.ss-section-label, .ss-explain-subhead, .ss-count,
+.ss-list-preview, .ss-list-prob, .ss-list-ts,
+.ss-stat-label, .ss-stat-value, .ss-prob-num, .ss-prob-label,
+.ss-theme-label, .ss-h1 {
+  transition: color 350ms cubic-bezier(0.4, 0, 0.2, 1) 240ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-delay: 0ms !important; }
+}
