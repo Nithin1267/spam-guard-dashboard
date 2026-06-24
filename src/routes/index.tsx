@@ -1,29 +1,356 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      { title: "SpamSense — AI Spam Email Classifier" },
+      {
+        name: "description",
+        content:
+          "Detect spam emails instantly with a modern, client-side classifier. Probability scoring, keyword highlighting, and history tracking.",
+      },
+      { property: "og:title", content: "SpamSense — Spam Email Classifier" },
+      {
+        property: "og:description",
+        content: "Modern client-side spam classifier with probability scoring and history.",
+      },
     ],
   }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
+/* ------------------------------ Classifier ------------------------------ */
+
+const SPAM_KEYWORDS: { word: string; weight: number }[] = [
+  { word: "free", weight: 8 },
+  { word: "winner", weight: 12 },
+  { word: "won", weight: 9 },
+  { word: "prize", weight: 11 },
+  { word: "cash", weight: 9 },
+  { word: "urgent", weight: 10 },
+  { word: "act now", weight: 12 },
+  { word: "limited time", weight: 10 },
+  { word: "click here", weight: 12 },
+  { word: "click below", weight: 10 },
+  { word: "buy now", weight: 10 },
+  { word: "cheap", weight: 6 },
+  { word: "discount", weight: 6 },
+  { word: "offer", weight: 5 },
+  { word: "guarantee", weight: 7 },
+  { word: "risk free", weight: 10 },
+  { word: "credit card", weight: 9 },
+  { word: "loan", weight: 7 },
+  { word: "investment", weight: 6 },
+  { word: "bitcoin", weight: 8 },
+  { word: "crypto", weight: 7 },
+  { word: "lottery", weight: 14 },
+  { word: "viagra", weight: 18 },
+  { word: "pharmacy", weight: 10 },
+  { word: "weight loss", weight: 9 },
+  { word: "miracle", weight: 8 },
+  { word: "congratulations", weight: 9 },
+  { word: "claim", weight: 8 },
+  { word: "verify your account", weight: 12 },
+  { word: "password", weight: 6 },
+  { word: "ssn", weight: 12 },
+  { word: "wire transfer", weight: 11 },
+  { word: "nigerian prince", weight: 20 },
+  { word: "inheritance", weight: 9 },
+  { word: "100%", weight: 6 },
+  { word: "$$$", weight: 12 },
+  { word: "earn money", weight: 10 },
+  { word: "make money fast", weight: 14 },
+  { word: "work from home", weight: 7 },
+  { word: "no obligation", weight: 7 },
+  { word: "pre-approved", weight: 9 },
+  { word: "subscribe", weight: 4 },
+  { word: "unsubscribe", weight: 4 },
+];
+
+type Analysis = {
+  verdict: "spam" | "safe";
+  probability: number;
+  matches: { word: string; count: number; weight: number }[];
+  highlighted: string;
+};
+
+function escapeHtml(s: string) {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function escapeRegex(s: string) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function analyze(text: string): Analysis {
+  const safe = escapeHtml(text);
+  let highlighted = safe;
+  const matches: { word: string; count: number; weight: number }[] = [];
+  let score = 0;
+
+  for (const { word, weight } of SPAM_KEYWORDS) {
+    const re = new RegExp(`\\b${escapeRegex(word)}\\b`, "gi");
+    const found = safe.match(re);
+    if (found && found.length > 0) {
+      matches.push({ word, count: found.length, weight });
+      score += weight * found.length;
+      highlighted = highlighted.replace(re, (m) => `<mark class="ss-mark">${m}</mark>`);
+    }
+  }
+
+  // Heuristics
+  const exclam = (text.match(/!/g) || []).length;
+  if (exclam >= 3) score += Math.min(exclam * 2, 14);
+
+  const upperWords = (text.match(/\b[A-Z]{4,}\b/g) || []).length;
+  if (upperWords > 0) score += Math.min(upperWords * 4, 16);
+
+  const links = (text.match(/https?:\/\/\S+/gi) || []).length;
+  if (links > 0) score += Math.min(links * 5, 15);
+
+  const probability = Math.max(0, Math.min(100, Math.round((score / 60) * 100)));
+  const verdict: "spam" | "safe" = probability >= 50 ? "spam" : "safe";
+
+  return { verdict, probability, matches, highlighted };
+}
+
+/* --------------------------------- UI ---------------------------------- */
+
+type HistoryItem = {
+  id: string;
+  ts: number;
+  preview: string;
+  verdict: "spam" | "safe";
+  probability: number;
+};
+
+const STORAGE_KEY = "spamsense.history.v1";
+
 function Index() {
+  const [text, setText] = useState("");
+  const [result, setResult] = useState<Analysis | null>(null);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [checking, setChecking] = useState(false);
+  const resultRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) setHistory(JSON.parse(raw));
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+    } catch {}
+  }, [history]);
+
+  const stats = useMemo(() => {
+    const total = history.length;
+    const spam = history.filter((h) => h.verdict === "spam").length;
+    return { total, spam, safe: total - spam };
+  }, [history]);
+
+  function handleCheck() {
+    if (!text.trim()) return;
+    setChecking(true);
+    setTimeout(() => {
+      const a = analyze(text);
+      setResult(a);
+      const item: HistoryItem = {
+        id: crypto.randomUUID(),
+        ts: Date.now(),
+        preview: text.slice(0, 120),
+        verdict: a.verdict,
+        probability: a.probability,
+      };
+      setHistory((h) => [item, ...h].slice(0, 25));
+      setChecking(false);
+      requestAnimationFrame(() => {
+        resultRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
+    }, 450);
+  }
+
+  function clearHistory() {
+    setHistory([]);
+  }
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="ss-root">
+      <BackgroundFX />
+
+      <header className="ss-header">
+        <div className="ss-brand">
+          <div className="ss-logo" aria-hidden>
+            <span />
+          </div>
+          <div>
+            <div className="ss-brand-name">SpamSense</div>
+            <div className="ss-brand-sub">Client-side email classifier</div>
+          </div>
+        </div>
+        <div className="ss-pill">
+          <span className="ss-dot" /> No backend · Runs in your browser
+        </div>
+      </header>
+
+      <main className="ss-main">
+        <section className="ss-hero">
+          <h1 className="ss-h1">
+            Detect <span className="ss-grad">spam</span> before it reaches your inbox.
+          </h1>
+          <p className="ss-lead">
+            Paste any email below. SpamSense scores it instantly using a transparent
+            keyword-and-heuristic model — all in your browser.
+          </p>
+        </section>
+
+        <section className="ss-grid">
+          <StatCard label="Total Checked" value={stats.total} tone="neutral" />
+          <StatCard label="Spam Detected" value={stats.spam} tone="danger" />
+          <StatCard label="Safe Emails" value={stats.safe} tone="success" />
+        </section>
+
+        <section className="ss-card ss-editor">
+          <div className="ss-card-head">
+            <h2>Analyze an email</h2>
+            <span className="ss-count">{text.length} chars</span>
+          </div>
+          <textarea
+            className="ss-textarea"
+            placeholder="Paste email content here — subject line and body..."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            rows={10}
+          />
+          <div className="ss-actions">
+            <button
+              className="ss-btn ss-btn-primary"
+              onClick={handleCheck}
+              disabled={!text.trim() || checking}
+            >
+              {checking ? "Analyzing…" : "Check Spam"}
+            </button>
+            <button
+              className="ss-btn ss-btn-ghost"
+              onClick={() => {
+                setText("");
+                setResult(null);
+              }}
+              disabled={!text && !result}
+            >
+              Reset
+            </button>
+          </div>
+        </section>
+
+        {result && (
+          <section ref={resultRef} className="ss-card ss-result ss-fade">
+            <div className="ss-result-head">
+              <div className={`ss-verdict ss-verdict-${result.verdict}`}>
+                <span className="ss-verdict-dot" />
+                {result.verdict === "spam" ? "Spam Detected" : "Looks Safe"}
+              </div>
+              <div className="ss-prob">
+                <div className="ss-prob-num">{result.probability}%</div>
+                <div className="ss-prob-label">spam probability</div>
+              </div>
+            </div>
+
+            <div className="ss-meter">
+              <div
+                className={`ss-meter-fill ss-meter-${result.verdict}`}
+                style={{ width: `${result.probability}%` }}
+              />
+            </div>
+
+            <div className="ss-section-label">Highlighted content</div>
+            <div
+              className="ss-highlighted"
+              dangerouslySetInnerHTML={{ __html: result.highlighted || "<em>(empty)</em>" }}
+            />
+
+            <div className="ss-section-label">Triggered signals</div>
+            {result.matches.length === 0 ? (
+              <p className="ss-muted">No spam keywords detected.</p>
+            ) : (
+              <div className="ss-chips">
+                {result.matches.map((m) => (
+                  <span key={m.word} className="ss-chip">
+                    {m.word}
+                    <span className="ss-chip-x">×{m.count}</span>
+                  </span>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
+
+        <section className="ss-card ss-history">
+          <div className="ss-card-head">
+            <h2>Recent checks</h2>
+            {history.length > 0 && (
+              <button className="ss-link" onClick={clearHistory}>
+                Clear history
+              </button>
+            )}
+          </div>
+          {history.length === 0 ? (
+            <p className="ss-muted">No checks yet. Run your first analysis above.</p>
+          ) : (
+            <ul className="ss-list">
+              {history.map((h) => (
+                <li key={h.id} className="ss-list-item">
+                  <span className={`ss-badge ss-badge-${h.verdict}`}>
+                    {h.verdict.toUpperCase()}
+                  </span>
+                  <span className="ss-list-preview">{h.preview || "(empty)"}</span>
+                  <span className="ss-list-prob">{h.probability}%</span>
+                  <span className="ss-list-ts">{new Date(h.ts).toLocaleString()}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        <footer className="ss-footer">
+          <div>Built for the Data Science portfolio · Pure HTML / CSS / JS logic</div>
+        </footer>
+      </main>
+    </div>
+  );
+}
+
+function StatCard({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: number;
+  tone: "neutral" | "danger" | "success";
+}) {
+  return (
+    <div className={`ss-stat ss-stat-${tone}`}>
+      <div className="ss-stat-label">{label}</div>
+      <div className="ss-stat-value">{value}</div>
+      <div className="ss-stat-glow" aria-hidden />
+    </div>
+  );
+}
+
+function BackgroundFX() {
+  return (
+    <div className="ss-bg" aria-hidden>
+      <div className="ss-bg-orb ss-bg-orb-1" />
+      <div className="ss-bg-orb ss-bg-orb-2" />
+      <div className="ss-bg-grid" />
     </div>
   );
 }
