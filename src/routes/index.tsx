@@ -264,8 +264,30 @@ function Index() {
             <div className="ss-brand-sub">Client-side email classifier</div>
           </div>
         </div>
-        <div className="ss-pill">
-          <span className="ss-dot" /> No backend · Runs in your browser
+        <div className="ss-header-right">
+          <div className="ss-themes" role="group" aria-label="Theme">
+            {THEMES.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                className={`ss-theme-btn${theme === t.id ? " ss-theme-active" : ""}`}
+                onClick={() => setTheme(t.id)}
+                aria-pressed={theme === t.id}
+                title={t.label}
+              >
+                <span
+                  className="ss-theme-swatch"
+                  style={{
+                    background: `linear-gradient(135deg, ${t.swatch[0]} 0%, ${t.swatch[0]} 50%, ${t.swatch[1]} 50%, ${t.swatch[1]} 100%)`,
+                  }}
+                />
+                <span className="ss-theme-label">{t.label}</span>
+              </button>
+            ))}
+          </div>
+          <div className="ss-pill ss-pill-hide-sm">
+            <span className="ss-dot" /> No backend
+          </div>
         </div>
       </header>
 
