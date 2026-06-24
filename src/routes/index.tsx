@@ -333,6 +333,103 @@ function Index() {
                 ))}
               </div>
             )}
+
+            <div className="ss-section-label">How this score was computed</div>
+            <div className="ss-explain">
+              <p className="ss-explain-intro">
+                Each spam keyword carries a fixed <b>weight</b>. Every occurrence
+                contributes <code>weight × count</code> points. Structural
+                heuristics (caps, exclamations, links) add bounded points on
+                top. The total is normalized to a probability:
+                <br />
+                <code className="ss-formula">
+                  probability = clamp(round(total / {result.normalizer} × 100), 0, 100)
+                </code>
+                <br />
+                Anything ≥ <b>{result.threshold}%</b> is flagged as spam.
+              </p>
+
+              {result.matches.length > 0 && (
+                <>
+                  <div className="ss-explain-subhead">Keyword contributions</div>
+                  <div className="ss-breakdown">
+                    <div className="ss-bd-row ss-bd-head">
+                      <span>Keyword</span>
+                      <span>Weight</span>
+                      <span>Count</span>
+                      <span>Points</span>
+                    </div>
+                    {result.matches.map((m) => {
+                      const share = result.totalScore
+                        ? (m.points / result.totalScore) * 100
+                        : 0;
+                      return (
+                        <div key={m.word} className="ss-bd-row">
+                          <span className="ss-bd-word">{m.word}</span>
+                          <span>{m.weight}</span>
+                          <span>×{m.count}</span>
+                          <span className="ss-bd-points">
+                            <span className="ss-bd-bar">
+                              <span
+                                className="ss-bd-bar-fill"
+                                style={{ width: `${share}%` }}
+                              />
+                            </span>
+                            +{m.points}
+                          </span>
+                        </div>
+                      );
+                    })}
+                    <div className="ss-bd-row ss-bd-sub">
+                      <span>Keyword subtotal</span>
+                      <span></span>
+                      <span></span>
+                      <span className="ss-bd-points">+{result.keywordScore}</span>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {result.heuristics.length > 0 && (
+                <>
+                  <div className="ss-explain-subhead">Heuristic contributions</div>
+                  <div className="ss-breakdown">
+                    {result.heuristics.map((h) => (
+                      <div key={h.label} className="ss-bd-row ss-bd-heur">
+                        <span className="ss-bd-word">{h.label}</span>
+                        <span className="ss-bd-detail">{h.detail}</span>
+                        <span></span>
+                        <span className="ss-bd-points">+{h.points}</span>
+                      </div>
+                    ))}
+                    <div className="ss-bd-row ss-bd-sub">
+                      <span>Heuristic subtotal</span>
+                      <span></span>
+                      <span></span>
+                      <span className="ss-bd-points">+{result.heuristicScore}</span>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              <div className="ss-total">
+                <div className="ss-total-line">
+                  <span>Total raw score</span>
+                  <span className="ss-total-num">{result.totalScore}</span>
+                </div>
+                <div className="ss-total-line">
+                  <span>÷ normalizer ({result.normalizer}) × 100</span>
+                  <span>
+                    {result.totalScore} / {result.normalizer} × 100 ={" "}
+                    {Math.round((result.totalScore / result.normalizer) * 100)}
+                  </span>
+                </div>
+                <div className="ss-total-line ss-total-final">
+                  <span>Final probability (clamped 0–100)</span>
+                  <span className="ss-total-num">{result.probability}%</span>
+                </div>
+              </div>
+            </div>
           </section>
         )}
 
