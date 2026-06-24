@@ -68,10 +68,18 @@ const SPAM_KEYWORDS: { word: string; weight: number }[] = [
   { word: "unsubscribe", weight: 4 },
 ];
 
+type HeuristicHit = { label: string; detail: string; points: number };
+
 type Analysis = {
   verdict: "spam" | "safe";
   probability: number;
-  matches: { word: string; count: number; weight: number }[];
+  matches: { word: string; count: number; weight: number; points: number }[];
+  heuristics: HeuristicHit[];
+  keywordScore: number;
+  heuristicScore: number;
+  totalScore: number;
+  threshold: number;
+  normalizer: number;
   highlighted: string;
 };
 
@@ -86,36 +94,72 @@ function escapeRegex(s: string) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+const SCORE_NORMALIZER = 60;
+
 function analyze(text: string): Analysis {
   const safe = escapeHtml(text);
   let highlighted = safe;
-  const matches: { word: string; count: number; weight: number }[] = [];
-  let score = 0;
+  const matches: Analysis["matches"] = [];
+  let keywordScore = 0;
 
   for (const { word, weight } of SPAM_KEYWORDS) {
     const re = new RegExp(`\\b${escapeRegex(word)}\\b`, "gi");
     const found = safe.match(re);
     if (found && found.length > 0) {
-      matches.push({ word, count: found.length, weight });
-      score += weight * found.length;
+      const points = weight * found.length;
+      matches.push({ word, count: found.length, weight, points });
+      keywordScore += points;
       highlighted = highlighted.replace(re, (m) => `<mark class="ss-mark">${m}</mark>`);
     }
   }
+  matches.sort((a, b) => b.points - a.points);
 
-  // Heuristics
+  const heuristics: HeuristicHit[] = [];
   const exclam = (text.match(/!/g) || []).length;
-  if (exclam >= 3) score += Math.min(exclam * 2, 14);
-
+  if (exclam >= 3) {
+    const pts = Math.min(exclam * 2, 14);
+    heuristics.push({
+      label: "Excessive exclamation marks",
+      detail: `${exclam} "!" found → min(${exclam}×2, 14)`,
+      points: pts,
+    });
+  }
   const upperWords = (text.match(/\b[A-Z]{4,}\b/g) || []).length;
-  if (upperWords > 0) score += Math.min(upperWords * 4, 16);
-
+  if (upperWords > 0) {
+    const pts = Math.min(upperWords * 4, 16);
+    heuristics.push({
+      label: "ALL-CAPS words",
+      detail: `${upperWords} caps word${upperWords > 1 ? "s" : ""} → min(${upperWords}×4, 16)`,
+      points: pts,
+    });
+  }
   const links = (text.match(/https?:\/\/\S+/gi) || []).length;
-  if (links > 0) score += Math.min(links * 5, 15);
+  if (links > 0) {
+    const pts = Math.min(links * 5, 15);
+    heuristics.push({
+      label: "Embedded links",
+      detail: `${links} URL${links > 1 ? "s" : ""} → min(${links}×5, 15)`,
+      points: pts,
+    });
+  }
 
-  const probability = Math.max(0, Math.min(100, Math.round((score / 60) * 100)));
+  const heuristicScore = heuristics.reduce((s, h) => s + h.points, 0);
+  const totalScore = keywordScore + heuristicScore;
+  const probability = Math.max(0, Math.min(100, Math.round((totalScore / SCORE_NORMALIZER) * 100)));
   const verdict: "spam" | "safe" = probability >= 50 ? "spam" : "safe";
 
-  return { verdict, probability, matches, highlighted };
+  return {
+    verdict,
+    probability,
+    matches,
+    heuristics,
+    keywordScore,
+    heuristicScore,
+    totalScore,
+    threshold: 50,
+    normalizer: SCORE_NORMALIZER,
+    highlighted,
+  };
 }
 
 /* --------------------------------- UI ---------------------------------- */
