@@ -173,13 +173,38 @@ type HistoryItem = {
 };
 
 const STORAGE_KEY = "spamsense.history.v1";
+const THEME_KEY = "spamsense.theme.v1";
+
+const THEMES = [
+  { id: "dark", label: "Midnight", swatch: ["#0d0d14", "#7c5cff"] },
+  { id: "light", label: "Daylight", swatch: ["#f6f7fb", "#5b5bf0"] },
+  { id: "ocean", label: "Ocean", swatch: ["#031b2e", "#22d3ee"] },
+  { id: "sunset", label: "Sunset", swatch: ["#1a0b1f", "#ff7a59"] },
+  { id: "forest", label: "Forest", swatch: ["#06140f", "#4ade80"] },
+] as const;
+type ThemeId = (typeof THEMES)[number]["id"];
 
 function Index() {
   const [text, setText] = useState("");
   const [result, setResult] = useState<Analysis | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [checking, setChecking] = useState(false);
+  const [theme, setTheme] = useState<ThemeId>("dark");
   const resultRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    try {
+      const t = localStorage.getItem(THEME_KEY) as ThemeId | null;
+      if (t && THEMES.some((x) => x.id === t)) setTheme(t);
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-ss-theme", theme);
+    try {
+      localStorage.setItem(THEME_KEY, theme);
+    } catch {}
+  }, [theme]);
 
   useEffect(() => {
     try {
