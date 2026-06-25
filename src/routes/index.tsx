@@ -510,11 +510,40 @@ function Index() {
           <div className="ss-card-head">
             <h2>Recent Analysis</h2>
             {history.length > 0 && (
-              <button className="ss-link" onClick={clearHistory}>
-                Clear history
-              </button>
+              <div className="ss-history-actions">
+                <button
+                  className="ss-link"
+                  onClick={() => {
+                    const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+                    downloadFile(
+                      `spamsense-history-${stamp}.json`,
+                      JSON.stringify(history, null, 2),
+                      "application/json",
+                    );
+                  }}
+                >
+                  Export JSON
+                </button>
+                <button
+                  className="ss-link"
+                  onClick={() => {
+                    const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+                    downloadFile(
+                      `spamsense-history-${stamp}.csv`,
+                      toCSV(history),
+                      "text/csv",
+                    );
+                  }}
+                >
+                  Export CSV
+                </button>
+                <button className="ss-link" onClick={clearHistory}>
+                  Clear history
+                </button>
+              </div>
             )}
           </div>
+
           {history.length === 0 ? (
             <p className="ss-muted">No emails analyzed yet. Run your first check above.</p>
           ) : (
