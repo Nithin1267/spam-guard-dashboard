@@ -1093,11 +1093,13 @@ body {
     radial-gradient(600px 200px at 100% 0%, color-mix(in oklab, var(--ss-accent) 22%, transparent), transparent 60%),
     linear-gradient(135deg, var(--ss-surface) 0%, var(--ss-surface-2) 100%);
   box-shadow: var(--ss-shadow);
-  display: grid;
-  grid-template-columns: 1.4fr 1fr;
-  gap: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
   align-items: center;
+  text-align: center;
   transform: translateY(-40px);
+
 }
 .ss-footer-cta-eyebrow {
   display: inline-block;
