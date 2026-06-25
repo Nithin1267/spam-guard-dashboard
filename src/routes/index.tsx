@@ -128,7 +128,12 @@ function Index() {
   useEffect(() => {
     try {
       const h = localStorage.getItem(STORAGE_KEY);
-      if (h) setHistory(JSON.parse(h));
+      if (h) {
+        const parsed = JSON.parse(h);
+        if (Array.isArray(parsed)) {
+          setHistory(parsed.filter((x: any) => x && x.result && typeof x.result.verdict === "string"));
+        }
+      }
       const p = localStorage.getItem(PREFS_KEY);
       if (p) {
         const parsed = JSON.parse(p);
