@@ -177,6 +177,46 @@ type HistoryItem = {
 
 const STORAGE_KEY = "spamsense.history.v1";
 
+const SAMPLE_EMAILS: { label: string; tone: "spam" | "suspicious" | "safe"; text: string }[] = [
+  {
+    label: "Obvious spam",
+    tone: "spam",
+    text: `CONGRATULATIONS!!! You are a WINNER of our $5,000,000 lottery prize!\n\nAct now — claim your CASH reward before this limited time offer expires. Click here: http://win-now.example.com/claim\n\nJust verify your account and credit card to receive your inheritance via wire transfer. 100% risk free, no obligation. Make money fast from home!`,
+  },
+  {
+    label: "Suspicious promo",
+    tone: "suspicious",
+    text: `Hi there,\n\nWe noticed you haven't used your account in a while. Enjoy 50% discount on your next order — limited time only.\n\nClick below to claim the offer: https://promo.example.com/deal\n\nThanks,\nThe Team`,
+  },
+  {
+    label: "Safe email",
+    tone: "safe",
+    text: `Hi Alex,\n\nThanks for the notes from yesterday's meeting. I've added the action items to the shared doc and will circle back on Thursday with the updated roadmap.\n\nLet me know if you'd like to move the sync earlier.\n\nBest,\nJordan`,
+  },
+];
+
+function downloadFile(filename: string, content: string, mime: string) {
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function toCSV(history: HistoryItem[]) {
+  const header = ["timestamp", "verdict", "probability", "preview"];
+  const esc = (v: string) => `"${v.replace(/"/g, '""')}"`;
+  const rows = history.map((h) =>
+    [new Date(h.ts).toISOString(), h.verdict, String(h.probability), h.preview]
+      .map(esc)
+      .join(","),
+  );
+  return [header.join(","), ...rows].join("\n");
+}
 
 function Index() {
   const [text, setText] = useState("");
@@ -184,6 +224,7 @@ function Index() {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [checking, setChecking] = useState(false);
   const resultRef = useRef<HTMLDivElement>(null);
+
 
 
 
@@ -272,6 +313,22 @@ function Index() {
             <h2>Analyze an Email</h2>
             <span className="ss-count">{text.length} characters</span>
           </div>
+          <div className="ss-samples">
+            <span className="ss-samples-label">Try a sample:</span>
+            {SAMPLE_EMAILS.map((s) => (
+              <button
+                key={s.label}
+                className={`ss-sample ss-sample-${s.tone}`}
+                onClick={() => {
+                  setText(s.text);
+                  setResult(null);
+                }}
+                type="button"
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
           <textarea
             className="ss-textarea"
             placeholder="Paste the email subject and body here to check whether it is spam or safe..."
@@ -303,6 +360,7 @@ function Index() {
             locally in your browser.
           </p>
         </section>
+
 
 
         {result && (
@@ -452,11 +510,40 @@ function Index() {
           <div className="ss-card-head">
             <h2>Recent Analysis</h2>
             {history.length > 0 && (
-              <button className="ss-link" onClick={clearHistory}>
-                Clear history
-              </button>
+              <div className="ss-history-actions">
+                <button
+                  className="ss-link"
+                  onClick={() => {
+                    const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+                    downloadFile(
+                      `spamsense-history-${stamp}.json`,
+                      JSON.stringify(history, null, 2),
+                      "application/json",
+                    );
+                  }}
+                >
+                  Export JSON
+                </button>
+                <button
+                  className="ss-link"
+                  onClick={() => {
+                    const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+                    downloadFile(
+                      `spamsense-history-${stamp}.csv`,
+                      toCSV(history),
+                      "text/csv",
+                    );
+                  }}
+                >
+                  Export CSV
+                </button>
+                <button className="ss-link" onClick={clearHistory}>
+                  Clear history
+                </button>
+              </div>
             )}
           </div>
+
           {history.length === 0 ? (
             <p className="ss-muted">No emails analyzed yet. Run your first check above.</p>
           ) : (
