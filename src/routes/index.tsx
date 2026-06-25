@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
+import cyberBg from "@/assets/cyber-bg.png.asset.json";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
