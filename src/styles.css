@@ -5,30 +5,30 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --ss-bg: #07070b;
-  --ss-bg-2: #0d0d14;
-  --ss-surface: rgba(255, 255, 255, 0.04);
-  --ss-surface-2: rgba(255, 255, 255, 0.06);
-  --ss-border: rgba(255, 255, 255, 0.08);
-  --ss-border-2: rgba(255, 255, 255, 0.14);
-  --ss-text: #e7e9ee;
-  --ss-text-dim: #9aa0ad;
-  --ss-text-mute: #6b7180;
+  --ss-bg: #0F172A;
+  --ss-bg-2: #1E293B;
+  --ss-surface: #1E293B;
+  --ss-surface-2: #273449;
+  --ss-border: rgba(148, 163, 184, 0.16);
+  --ss-border-2: rgba(148, 163, 184, 0.28);
+  --ss-text: #E2E8F0;
+  --ss-text-dim: #94A3B8;
+  --ss-text-mute: #64748B;
 
-  --ss-accent: #7c5cff;
-  --ss-accent-2: #22d3ee;
-  --ss-danger: #ff5c7a;
-  --ss-success: #34d399;
-  --ss-warn: #fbbf24;
+  --ss-accent: #38BDF8;
+  --ss-accent-2: #0EA5E9;
+  --ss-danger: #EF4444;
+  --ss-success: #22C55E;
+  --ss-warn: #FBBF24;
 
   --ss-radius: 16px;
   --ss-radius-sm: 10px;
 
-  --ss-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
-  --ss-glow-accent: 0 0 40px -10px rgba(124, 92, 255, 0.6);
-  --ss-glow-danger: 0 0 40px -10px rgba(255, 92, 122, 0.6);
-  --ss-glow-success: 0 0 40px -10px rgba(52, 211, 153, 0.55);
+  --ss-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(148, 163, 184, 0.06) inset;
+  --ss-glow-accent: 0 0 40px -10px rgba(56, 189, 248, 0.55);
+  --ss-glow-danger: 0 0 40px -10px rgba(239, 68, 68, 0.55);
+  --ss-glow-success: 0 0 40px -10px rgba(34, 197, 94, 0.5);
 }
 
 * {
