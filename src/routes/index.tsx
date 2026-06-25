@@ -203,7 +203,8 @@ function Index() {
   const stats = useMemo(() => {
     const total = history.length;
     const spam = history.filter((h) => h.verdict === "spam").length;
-    return { total, spam, safe: total - spam };
+    const suspicious = history.filter((h) => h.verdict === "suspicious").length;
+    return { total, spam, suspicious, safe: total - spam - suspicious };
   }, [history]);
 
   function handleCheck() {
