@@ -310,7 +310,11 @@ function Index() {
             <div className="ss-result-head">
               <div className={`ss-verdict ss-verdict-${result.verdict}`}>
                 <span className="ss-verdict-dot" />
-                {result.verdict === "spam" ? "Spam Detected" : "Looks Safe"}
+                {result.verdict === "spam"
+                  ? "Spam Detected"
+                  : result.verdict === "suspicious"
+                  ? "Suspicious"
+                  : "Looks Safe"}
               </div>
               <div className="ss-prob">
                 <div className="ss-prob-num">{result.probability}%</div>
