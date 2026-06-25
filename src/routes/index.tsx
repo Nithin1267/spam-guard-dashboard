@@ -177,6 +177,46 @@ type HistoryItem = {
 
 const STORAGE_KEY = "spamsense.history.v1";
 
+const SAMPLE_EMAILS: { label: string; tone: "spam" | "suspicious" | "safe"; text: string }[] = [
+  {
+    label: "Obvious spam",
+    tone: "spam",
+    text: `CONGRATULATIONS!!! You are a WINNER of our $5,000,000 lottery prize!\n\nAct now — claim your CASH reward before this limited time offer expires. Click here: http://win-now.example.com/claim\n\nJust verify your account and credit card to receive your inheritance via wire transfer. 100% risk free, no obligation. Make money fast from home!`,
+  },
+  {
+    label: "Suspicious promo",
+    tone: "suspicious",
+    text: `Hi there,\n\nWe noticed you haven't used your account in a while. Enjoy 50% discount on your next order — limited time only.\n\nClick below to claim the offer: https://promo.example.com/deal\n\nThanks,\nThe Team`,
+  },
+  {
+    label: "Safe email",
+    tone: "safe",
+    text: `Hi Alex,\n\nThanks for the notes from yesterday's meeting. I've added the action items to the shared doc and will circle back on Thursday with the updated roadmap.\n\nLet me know if you'd like to move the sync earlier.\n\nBest,\nJordan`,
+  },
+];
+
+function downloadFile(filename: string, content: string, mime: string) {
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function toCSV(history: HistoryItem[]) {
+  const header = ["timestamp", "verdict", "probability", "preview"];
+  const esc = (v: string) => `"${v.replace(/"/g, '""')}"`;
+  const rows = history.map((h) =>
+    [new Date(h.ts).toISOString(), h.verdict, String(h.probability), h.preview]
+      .map(esc)
+      .join(","),
+  );
+  return [header.join(","), ...rows].join("\n");
+}
 
 function Index() {
   const [text, setText] = useState("");
@@ -184,6 +224,7 @@ function Index() {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [checking, setChecking] = useState(false);
   const resultRef = useRef<HTMLDivElement>(null);
+
 
 
 
