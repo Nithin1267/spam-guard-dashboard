@@ -179,6 +179,16 @@ type HistoryItem = {
 
 const STORAGE_KEY = "spamsense.history.v1";
 
+type ThemeId = "dark" | "light" | "ocean" | "sunset" | "forest" | "rose";
+const THEMES: { id: ThemeId; label: string; swatch: [string, string] }[] = [
+  { id: "dark", label: "Midnight", swatch: ["#0F172A", "#38BDF8"] },
+  { id: "light", label: "Daylight", swatch: ["#F8FAFC", "#0284C7"] },
+  { id: "ocean", label: "Ocean", swatch: ["#031b2e", "#22d3ee"] },
+  { id: "sunset", label: "Sunset", swatch: ["#1a0b1f", "#ff7a59"] },
+  { id: "forest", label: "Forest", swatch: ["#06140f", "#4ade80"] },
+  { id: "rose", label: "Rose", swatch: ["#fdf2f8", "#c026d3"] },
+];
+
 const SAMPLE_EMAILS: { label: string; tone: "spam" | "suspicious" | "safe"; text: string }[] = [
   {
     label: "Obvious spam",
