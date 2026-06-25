@@ -450,7 +450,7 @@ function Index() {
 
         <section className="ss-card ss-history">
           <div className="ss-card-head">
-            <h2>Recent checks</h2>
+            <h2>Recent Analysis</h2>
             {history.length > 0 && (
               <button className="ss-link" onClick={clearHistory}>
                 Clear history
