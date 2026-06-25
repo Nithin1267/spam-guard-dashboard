@@ -458,7 +458,7 @@ function Index() {
             )}
           </div>
           {history.length === 0 ? (
-            <p className="ss-muted">No checks yet. Run your first analysis above.</p>
+            <p className="ss-muted">No emails analyzed yet. Run your first check above.</p>
           ) : (
             <ul className="ss-list">
               {history.map((h) => (
