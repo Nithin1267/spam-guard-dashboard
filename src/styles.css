@@ -851,3 +851,64 @@ body {
   align-items: center;
   flex-wrap: wrap;
 }
+
+/* ============================ Light theme overrides ============================ */
+[data-ss-theme="light"] {
+  --ss-bg: #F8FAFC;
+  --ss-bg-2: #EEF2F7;
+  --ss-surface: #FFFFFF;
+  --ss-surface-2: #F1F5F9;
+  --ss-border: rgba(15, 23, 42, 0.10);
+  --ss-border-2: rgba(15, 23, 42, 0.18);
+  --ss-text: #0F172A;
+  --ss-text-dim: #475569;
+  --ss-text-mute: #64748B;
+
+  --ss-accent: #0284C7;
+  --ss-accent-2: #0369A1;
+
+  --ss-shadow: 0 10px 30px -12px rgba(15, 23, 42, 0.18),
+    0 0 0 1px rgba(15, 23, 42, 0.04) inset;
+  --ss-glow-accent: 0 0 30px -10px rgba(2, 132, 199, 0.4);
+}
+[data-ss-theme="light"] .ss-bg {
+  background:
+    radial-gradient(1200px 800px at 80% -10%, rgba(56, 189, 248, 0.18), transparent 60%),
+    radial-gradient(900px 600px at -10% 30%, rgba(124, 92, 255, 0.10), transparent 60%),
+    linear-gradient(180deg, var(--ss-bg) 0%, var(--ss-bg-2) 100%);
+}
+[data-ss-theme="light"] .ss-bg-grid {
+  background-image:
+    linear-gradient(rgba(15, 23, 42, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.05) 1px, transparent 1px);
+}
+[data-ss-theme="light"] .ss-textarea {
+  background: #FFFFFF;
+  color: var(--ss-text);
+}
+[data-ss-theme="light"] .ss-highlighted,
+[data-ss-theme="light"] .ss-list-item,
+[data-ss-theme="light"] .ss-breakdown,
+[data-ss-theme="light"] .ss-total {
+  background: #FFFFFF;
+}
+
+/* Theme toggle button */
+.ss-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--ss-border);
+  background: var(--ss-surface);
+  color: var(--ss-text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease;
+}
+.ss-theme-toggle:hover {
+  transform: translateY(-1px);
+  border-color: var(--ss-border-2);
+}
