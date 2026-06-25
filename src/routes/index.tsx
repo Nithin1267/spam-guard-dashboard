@@ -660,28 +660,6 @@ function Index() {
             </div>
           </div>
 
-          <div className="ss-footer-cols">
-            <div className="ss-footer-col">
-              <div className="ss-footer-h">Product</div>
-              <a href="#" className="ss-footer-link">Analyzer</a>
-              <a href="#" className="ss-footer-link">How it works</a>
-              <a href="#" className="ss-footer-link">Recent analysis</a>
-              <a href="#" className="ss-footer-link">Changelog</a>
-            </div>
-            <div className="ss-footer-col">
-              <div className="ss-footer-h">Resources</div>
-              <a href="https://en.wikipedia.org/wiki/Email_spam" target="_blank" rel="noreferrer" className="ss-footer-link">Spam basics</a>
-              <a href="https://owasp.org/" target="_blank" rel="noreferrer" className="ss-footer-link">OWASP</a>
-              <a href="#" className="ss-footer-link">Privacy</a>
-              <a href="#" className="ss-footer-link">Documentation</a>
-            </div>
-            <div className="ss-footer-col">
-              <div className="ss-footer-h">Company</div>
-              <a href="#" className="ss-footer-link">About</a>
-              <a href="#" className="ss-footer-link">Blog</a>
-              <a href="mailto:hello@spamsense.app" className="ss-footer-link">Contact</a>
-            </div>
-          </div>
         </div>
 
         <div className="ss-footer-bottom">
