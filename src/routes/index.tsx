@@ -256,25 +256,25 @@ function Index() {
             Detect <span className="ss-grad">spam</span> before it reaches your inbox.
           </h1>
           <p className="ss-lead">
-            Paste any email below. SpamSense scores it instantly using a transparent
-            keyword-and-heuristic model — all in your browser.
+            Paste any email below and analyze it instantly using a transparent
+            keyword and heuristic-based model — all processed locally in your browser.
           </p>
         </section>
 
         <section className="ss-grid">
-          <StatCard label="Total Checked" value={stats.total} tone="neutral" />
+          <StatCard label="Total Emails Checked" value={stats.total} tone="neutral" />
           <StatCard label="Spam Detected" value={stats.spam} tone="danger" />
           <StatCard label="Safe Emails" value={stats.safe} tone="success" />
         </section>
 
         <section className="ss-card ss-editor">
           <div className="ss-card-head">
-            <h2>Analyze an email</h2>
-            <span className="ss-count">{text.length} chars</span>
+            <h2>Analyze an Email</h2>
+            <span className="ss-count">{text.length} characters</span>
           </div>
           <textarea
             className="ss-textarea"
-            placeholder="Paste email content here — subject line and body..."
+            placeholder="Paste the email subject and body here to check whether it is spam or safe..."
             value={text}
             onChange={(e) => setText(e.target.value)}
             rows={10}
@@ -298,7 +298,12 @@ function Index() {
               Reset
             </button>
           </div>
+          <p className="ss-privacy">
+            🔒 Your email content never leaves your device. All analysis runs
+            locally in your browser.
+          </p>
         </section>
+
 
         {result && (
           <section ref={resultRef} className="ss-card ss-result ss-fade">
