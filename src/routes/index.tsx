@@ -70,8 +70,10 @@ const SPAM_KEYWORDS: { word: string; weight: number }[] = [
 
 type HeuristicHit = { label: string; detail: string; points: number };
 
+type Verdict = "spam" | "safe" | "suspicious";
+
 type Analysis = {
-  verdict: "spam" | "safe";
+  verdict: Verdict;
   probability: number;
   matches: { word: string; count: number; weight: number; points: number }[];
   heuristics: HeuristicHit[];
