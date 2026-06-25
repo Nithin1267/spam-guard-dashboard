@@ -225,12 +225,12 @@ function Index() {
   const [result, setResult] = useState<Analysis | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [checking, setChecking] = useState(false);
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [theme, setTheme] = useState<ThemeId>("dark");
   const resultRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const saved = (localStorage.getItem("spamsense.theme") as "dark" | "light" | null) ?? "dark";
-    setTheme(saved);
+    const saved = localStorage.getItem("spamsense.theme") as ThemeId | null;
+    if (saved && THEMES.some((t) => t.id === saved)) setTheme(saved);
   }, []);
 
   useEffect(() => {
