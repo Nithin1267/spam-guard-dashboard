@@ -299,7 +299,16 @@ function Index() {
             <div className="ss-brand-sub">Client-side Email Spam Classifier</div>
           </div>
         </div>
+        <button
+          className="ss-theme-toggle"
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          aria-label="Toggle theme"
+          type="button"
+        >
+          {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
+        </button>
       </header>
+
 
 
 
