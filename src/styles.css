@@ -1118,7 +1118,7 @@ body {
   color: var(--ss-text);
 }
 .ss-footer-cta-sub {
-  margin: 0;
+  margin: 0 auto;
   font-size: 14px;
   color: var(--ss-text-dim);
   max-width: 46ch;
@@ -1127,7 +1127,10 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
+  width: 100%;
+  max-width: 520px;
 }
+
 .ss-footer-stat {
   padding: 14px 12px;
   border-radius: 12px;
