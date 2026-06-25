@@ -1144,10 +1144,8 @@ body {
 .ss-footer-inner {
   max-width: 1100px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1.4fr 2fr;
-  gap: 56px;
-  padding-bottom: 36px;
+  display: block;
+  padding-bottom: 28px;
   border-bottom: 1px solid var(--ss-border);
 }
 .ss-footer-brand {
