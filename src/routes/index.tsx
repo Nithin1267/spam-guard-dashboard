@@ -70,8 +70,10 @@ const SPAM_KEYWORDS: { word: string; weight: number }[] = [
 
 type HeuristicHit = { label: string; detail: string; points: number };
 
+type Verdict = "spam" | "safe" | "suspicious";
+
 type Analysis = {
-  verdict: "spam" | "safe";
+  verdict: Verdict;
   probability: number;
   matches: { word: string; count: number; weight: number; points: number }[];
   heuristics: HeuristicHit[];
@@ -146,7 +148,8 @@ function analyze(text: string): Analysis {
   const heuristicScore = heuristics.reduce((s, h) => s + h.points, 0);
   const totalScore = keywordScore + heuristicScore;
   const probability = Math.max(0, Math.min(100, Math.round((totalScore / SCORE_NORMALIZER) * 100)));
-  const verdict: "spam" | "safe" = probability >= 50 ? "spam" : "safe";
+  const verdict: Verdict =
+    probability >= 71 ? "spam" : probability >= 41 ? "suspicious" : "safe";
 
   return {
     verdict,
@@ -168,7 +171,7 @@ type HistoryItem = {
   id: string;
   ts: number;
   preview: string;
-  verdict: "spam" | "safe";
+  verdict: Verdict;
   probability: number;
 };
 
@@ -200,7 +203,8 @@ function Index() {
   const stats = useMemo(() => {
     const total = history.length;
     const spam = history.filter((h) => h.verdict === "spam").length;
-    return { total, spam, safe: total - spam };
+    const suspicious = history.filter((h) => h.verdict === "suspicious").length;
+    return { total, spam, suspicious, safe: total - spam - suspicious };
   }, [history]);
 
   function handleCheck() {
@@ -239,7 +243,7 @@ function Index() {
           </div>
           <div>
             <div className="ss-brand-name">SpamSense</div>
-            <div className="ss-brand-sub">Client-side email classifier</div>
+            <div className="ss-brand-sub">Client-side Email Spam Classifier</div>
           </div>
         </div>
       </header>
@@ -252,25 +256,25 @@ function Index() {
             Detect <span className="ss-grad">spam</span> before it reaches your inbox.
           </h1>
           <p className="ss-lead">
-            Paste any email below. SpamSense scores it instantly using a transparent
-            keyword-and-heuristic model — all in your browser.
+            Paste any email below and analyze it instantly using a transparent
+            keyword and heuristic-based model — all processed locally in your browser.
           </p>
         </section>
 
         <section className="ss-grid">
-          <StatCard label="Total Checked" value={stats.total} tone="neutral" />
+          <StatCard label="Total Emails Checked" value={stats.total} tone="neutral" />
           <StatCard label="Spam Detected" value={stats.spam} tone="danger" />
           <StatCard label="Safe Emails" value={stats.safe} tone="success" />
         </section>
 
         <section className="ss-card ss-editor">
           <div className="ss-card-head">
-            <h2>Analyze an email</h2>
-            <span className="ss-count">{text.length} chars</span>
+            <h2>Analyze an Email</h2>
+            <span className="ss-count">{text.length} characters</span>
           </div>
           <textarea
             className="ss-textarea"
-            placeholder="Paste email content here — subject line and body..."
+            placeholder="Paste the email subject and body here to check whether it is spam or safe..."
             value={text}
             onChange={(e) => setText(e.target.value)}
             rows={10}
@@ -294,14 +298,23 @@ function Index() {
               Reset
             </button>
           </div>
+          <p className="ss-privacy">
+            🔒 Your email content never leaves your device. All analysis runs
+            locally in your browser.
+          </p>
         </section>
+
 
         {result && (
           <section ref={resultRef} className="ss-card ss-result ss-fade">
             <div className="ss-result-head">
               <div className={`ss-verdict ss-verdict-${result.verdict}`}>
                 <span className="ss-verdict-dot" />
-                {result.verdict === "spam" ? "Spam Detected" : "Looks Safe"}
+                {result.verdict === "spam"
+                  ? "Spam Detected"
+                  : result.verdict === "suspicious"
+                  ? "Suspicious"
+                  : "Looks Safe"}
               </div>
               <div className="ss-prob">
                 <div className="ss-prob-num">{result.probability}%</div>
@@ -437,7 +450,7 @@ function Index() {
 
         <section className="ss-card ss-history">
           <div className="ss-card-head">
-            <h2>Recent checks</h2>
+            <h2>Recent Analysis</h2>
             {history.length > 0 && (
               <button className="ss-link" onClick={clearHistory}>
                 Clear history
@@ -445,7 +458,7 @@ function Index() {
             )}
           </div>
           {history.length === 0 ? (
-            <p className="ss-muted">No checks yet. Run your first analysis above.</p>
+            <p className="ss-muted">No emails analyzed yet. Run your first check above.</p>
           ) : (
             <ul className="ss-list">
               {history.map((h) => (
