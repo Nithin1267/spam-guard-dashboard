@@ -243,7 +243,7 @@ function Index() {
           </div>
           <div>
             <div className="ss-brand-name">SpamSense</div>
-            <div className="ss-brand-sub">Client-side email classifier</div>
+            <div className="ss-brand-sub">Client-side Email Spam Classifier</div>
           </div>
         </div>
       </header>
