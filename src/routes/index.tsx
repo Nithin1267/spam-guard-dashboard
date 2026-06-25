@@ -608,12 +608,55 @@ function Index() {
       </main>
 
       <footer className="ss-footer">
+        <div className="ss-footer-cta">
+          <div className="ss-footer-cta-text">
+            <div className="ss-footer-cta-eyebrow">🛡 Built for inbox safety</div>
+            <h3 className="ss-footer-cta-title">
+              Stop spam <span className="ss-grad">before</span> it reaches you.
+            </h3>
+            <p className="ss-footer-cta-sub">
+              SpamSense runs 100% in your browser — no signups, no servers, no tracking.
+            </p>
+          </div>
+          <div className="ss-footer-cta-stats">
+            <div className="ss-footer-stat">
+              <div className="ss-footer-stat-n">0ms</div>
+              <div className="ss-footer-stat-l">Server latency</div>
+            </div>
+            <div className="ss-footer-stat">
+              <div className="ss-footer-stat-n">100%</div>
+              <div className="ss-footer-stat-l">Local processing</div>
+            </div>
+            <div className="ss-footer-stat">
+              <div className="ss-footer-stat-n">43+</div>
+              <div className="ss-footer-stat-l">Spam signals</div>
+            </div>
+          </div>
+        </div>
+
         <div className="ss-footer-inner">
           <div className="ss-footer-brand">
             <div className="ss-logo" aria-hidden><span /></div>
             <div>
               <div className="ss-footer-name">SpamSense</div>
-              <div className="ss-footer-tag">Client-side spam intelligence · {new Date().getFullYear()}</div>
+              <div className="ss-footer-tag">
+                Client-side spam intelligence — analyze, score, and learn
+                without ever sending your data to a server.
+              </div>
+              <div className="ss-footer-socials">
+                <a href="https://github.com" target="_blank" rel="noreferrer" aria-label="GitHub" className="ss-social">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden><path d="M12 .5C5.7.5.7 5.5.7 11.8c0 4.9 3.2 9.1 7.7 10.6.6.1.8-.3.8-.6v-2c-3.1.7-3.8-1.5-3.8-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.5-.3-5.1-1.2-5.1-5.5 0-1.2.4-2.2 1.1-3-.1-.3-.5-1.4.1-2.9 0 0 .9-.3 3 1.1.9-.3 1.9-.4 2.8-.4.9 0 1.9.1 2.8.4 2.1-1.4 3-1.1 3-1.1.6 1.5.2 2.6.1 2.9.7.8 1.1 1.8 1.1 3 0 4.3-2.6 5.2-5.1 5.5.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6 4.5-1.5 7.7-5.7 7.7-10.6C23.3 5.5 18.3.5 12 .5z"/></svg>
+                </a>
+                <a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="Twitter" className="ss-social">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden><path d="M18.244 2H21l-6.52 7.45L22 22h-6.79l-4.79-6.27L4.8 22H2l7-7.99L2 2h6.91l4.34 5.76L18.244 2zm-1.19 18h1.69L7.04 4H5.25l11.804 16z"/></svg>
+                </a>
+                <a href="https://linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="ss-social">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.22 8h4.56v14H.22V8zm7.6 0h4.37v1.92h.06c.61-1.15 2.1-2.36 4.32-2.36 4.62 0 5.47 3.04 5.47 7v7.44h-4.56v-6.6c0-1.57-.03-3.6-2.2-3.6-2.2 0-2.53 1.72-2.53 3.5V22H7.82V8z"/></svg>
+                </a>
+                <a href="mailto:hello@spamsense.app" aria-label="Email" className="ss-social">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+                </a>
+              </div>
             </div>
           </div>
 
@@ -623,25 +666,30 @@ function Index() {
               <a href="#" className="ss-footer-link">Analyzer</a>
               <a href="#" className="ss-footer-link">How it works</a>
               <a href="#" className="ss-footer-link">Recent analysis</a>
+              <a href="#" className="ss-footer-link">Changelog</a>
             </div>
             <div className="ss-footer-col">
               <div className="ss-footer-h">Resources</div>
               <a href="https://en.wikipedia.org/wiki/Email_spam" target="_blank" rel="noreferrer" className="ss-footer-link">Spam basics</a>
               <a href="https://owasp.org/" target="_blank" rel="noreferrer" className="ss-footer-link">OWASP</a>
               <a href="#" className="ss-footer-link">Privacy</a>
+              <a href="#" className="ss-footer-link">Documentation</a>
             </div>
             <div className="ss-footer-col">
-              <div className="ss-footer-h">Connect</div>
-              <a href="https://github.com" target="_blank" rel="noreferrer" className="ss-footer-link">GitHub</a>
-              <a href="https://twitter.com" target="_blank" rel="noreferrer" className="ss-footer-link">Twitter</a>
-              <a href="mailto:hello@example.com" className="ss-footer-link">Contact</a>
+              <div className="ss-footer-h">Company</div>
+              <a href="#" className="ss-footer-link">About</a>
+              <a href="#" className="ss-footer-link">Blog</a>
+              <a href="mailto:hello@spamsense.app" className="ss-footer-link">Contact</a>
             </div>
           </div>
         </div>
 
         <div className="ss-footer-bottom">
-          <span>© {new Date().getFullYear()} SpamSense. All rights reserved.</span>
-          <span className="ss-footer-note">🔒 100% client-side · No data ever leaves your browser</span>
+          <span>© {new Date().getFullYear()} SpamSense — All rights reserved.</span>
+          <span className="ss-footer-note">
+            <span className="ss-footer-pulse" aria-hidden />
+            All systems local · No data ever leaves your browser
+          </span>
         </div>
       </footer>
     </div>
