@@ -871,17 +871,23 @@ body {
     0 0 0 1px rgba(15, 23, 42, 0.04) inset;
   --ss-glow-accent: 0 0 30px -10px rgba(2, 132, 199, 0.4);
 }
+[data-ss-theme="light"] {
+  --ss-bg: #fdf2f8;
+  --ss-bg-2: #ede9fe;
+}
 [data-ss-theme="light"] .ss-bg {
   background:
-    radial-gradient(1200px 800px at 80% -10%, rgba(56, 189, 248, 0.18), transparent 60%),
-    radial-gradient(900px 600px at -10% 30%, rgba(124, 92, 255, 0.10), transparent 60%),
-    linear-gradient(180deg, var(--ss-bg) 0%, var(--ss-bg-2) 100%);
+    radial-gradient(1100px 700px at 85% -10%, rgba(221, 214, 254, 0.85), transparent 60%),
+    radial-gradient(900px 600px at -10% 20%, rgba(251, 207, 232, 0.75), transparent 60%),
+    radial-gradient(700px 500px at 50% 110%, rgba(233, 213, 255, 0.55), transparent 60%),
+    linear-gradient(180deg, #fdf2f8 0%, #ede9fe 100%);
 }
 [data-ss-theme="light"] .ss-bg-grid {
   background-image:
-    linear-gradient(rgba(15, 23, 42, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(15, 23, 42, 0.05) 1px, transparent 1px);
+    linear-gradient(rgba(124, 58, 237, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124, 58, 237, 0.06) 1px, transparent 1px);
 }
+
 [data-ss-theme="light"] .ss-textarea {
   background: #FFFFFF;
   color: var(--ss-text);
