@@ -1,5 +1,5 @@
 # SpamSense — Client-Side Email Spam Classifier
-
+LIVE DEMO:https://nithin1267.github.io/spam-guard-dashboard/
 A fast, private spam classifier that analyzes emails **entirely in your browser**. No backend, no tracking, no data ever leaves your device.
 
 ## ✨ Features
