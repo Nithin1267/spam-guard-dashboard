@@ -584,6 +584,44 @@ function Index() {
         </section>
 
       </main>
+
+      <footer className="ss-footer">
+        <div className="ss-footer-inner">
+          <div className="ss-footer-brand">
+            <div className="ss-logo" aria-hidden><span /></div>
+            <div>
+              <div className="ss-footer-name">SpamSense</div>
+              <div className="ss-footer-tag">Client-side spam intelligence · {new Date().getFullYear()}</div>
+            </div>
+          </div>
+
+          <div className="ss-footer-cols">
+            <div className="ss-footer-col">
+              <div className="ss-footer-h">Product</div>
+              <a href="#" className="ss-footer-link">Analyzer</a>
+              <a href="#" className="ss-footer-link">How it works</a>
+              <a href="#" className="ss-footer-link">Recent analysis</a>
+            </div>
+            <div className="ss-footer-col">
+              <div className="ss-footer-h">Resources</div>
+              <a href="https://en.wikipedia.org/wiki/Email_spam" target="_blank" rel="noreferrer" className="ss-footer-link">Spam basics</a>
+              <a href="https://owasp.org/" target="_blank" rel="noreferrer" className="ss-footer-link">OWASP</a>
+              <a href="#" className="ss-footer-link">Privacy</a>
+            </div>
+            <div className="ss-footer-col">
+              <div className="ss-footer-h">Connect</div>
+              <a href="https://github.com" target="_blank" rel="noreferrer" className="ss-footer-link">GitHub</a>
+              <a href="https://twitter.com" target="_blank" rel="noreferrer" className="ss-footer-link">Twitter</a>
+              <a href="mailto:hello@example.com" className="ss-footer-link">Contact</a>
+            </div>
+          </div>
+        </div>
+
+        <div className="ss-footer-bottom">
+          <span>© {new Date().getFullYear()} SpamSense. All rights reserved.</span>
+          <span className="ss-footer-note">🔒 100% client-side · No data ever leaves your browser</span>
+        </div>
+      </footer>
     </div>
   );
 }
