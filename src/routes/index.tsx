@@ -223,7 +223,19 @@ function Index() {
   const [result, setResult] = useState<Analysis | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [checking, setChecking] = useState(false);
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
   const resultRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const saved = (localStorage.getItem("spamsense.theme") as "dark" | "light" | null) ?? "dark";
+    setTheme(saved);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-ss-theme", theme);
+    try { localStorage.setItem("spamsense.theme", theme); } catch {}
+  }, [theme]);
+
 
 
 
