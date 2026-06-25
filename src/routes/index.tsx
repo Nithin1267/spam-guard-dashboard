@@ -176,7 +176,7 @@ const STORAGE_KEY = "spamsense.history.v1";
 const THEME_KEY = "spamsense.theme.v1";
 
 const THEMES = [
-  { id: "dark", label: "Midnight", swatch: ["#0d0d14", "#7c5cff"] },
+  { id: "dark", label: "Midnight", swatch: ["#0F172A", "#38BDF8"] },
   { id: "light", label: "Daylight", swatch: ["#f6f7fb", "#5b5bf0"] },
   { id: "ocean", label: "Ocean", swatch: ["#031b2e", "#22d3ee"] },
   { id: "sunset", label: "Sunset", swatch: ["#1a0b1f", "#ff7a59"] },
