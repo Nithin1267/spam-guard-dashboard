@@ -1241,13 +1241,15 @@ body {
   margin: 0 auto;
   padding-top: 20px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   gap: 16px;
   flex-wrap: wrap;
+  text-align: center;
   font-size: 12px;
   color: var(--ss-text-mute);
 }
+
 .ss-footer-note {
   display: inline-flex;
   align-items: center;
