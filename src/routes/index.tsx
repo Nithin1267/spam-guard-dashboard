@@ -649,9 +649,15 @@ function StatCard({
 function BackgroundFX() {
   return (
     <div className="ss-bg" aria-hidden>
+      <div
+        className="ss-bg-image"
+        style={{ backgroundImage: `url(${cyberBg.url})` }}
+      />
+      <div className="ss-bg-veil" />
       <div className="ss-bg-orb ss-bg-orb-1" />
       <div className="ss-bg-orb ss-bg-orb-2" />
       <div className="ss-bg-grid" />
     </div>
   );
 }
+
