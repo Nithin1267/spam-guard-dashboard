@@ -179,6 +179,16 @@ type HistoryItem = {
 
 const STORAGE_KEY = "spamsense.history.v1";
 
+type ThemeId = "dark" | "light" | "ocean" | "sunset" | "forest" | "rose";
+const THEMES: { id: ThemeId; label: string; swatch: [string, string] }[] = [
+  { id: "dark", label: "Midnight", swatch: ["#0F172A", "#38BDF8"] },
+  { id: "light", label: "Daylight", swatch: ["#F8FAFC", "#0284C7"] },
+  { id: "ocean", label: "Ocean", swatch: ["#031b2e", "#22d3ee"] },
+  { id: "sunset", label: "Sunset", swatch: ["#1a0b1f", "#ff7a59"] },
+  { id: "forest", label: "Forest", swatch: ["#06140f", "#4ade80"] },
+  { id: "rose", label: "Rose", swatch: ["#fdf2f8", "#c026d3"] },
+];
+
 const SAMPLE_EMAILS: { label: string; tone: "spam" | "suspicious" | "safe"; text: string }[] = [
   {
     label: "Obvious spam",
@@ -225,12 +235,12 @@ function Index() {
   const [result, setResult] = useState<Analysis | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [checking, setChecking] = useState(false);
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [theme, setTheme] = useState<ThemeId>("dark");
   const resultRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const saved = (localStorage.getItem("spamsense.theme") as "dark" | "light" | null) ?? "dark";
-    setTheme(saved);
+    const saved = localStorage.getItem("spamsense.theme") as ThemeId | null;
+    if (saved && THEMES.some((t) => t.id === saved)) setTheme(saved);
   }, []);
 
   useEffect(() => {
@@ -301,14 +311,24 @@ function Index() {
             <div className="ss-brand-sub">Client-side Email Spam Classifier</div>
           </div>
         </div>
-        <button
-          className="ss-theme-toggle"
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          aria-label="Toggle theme"
-          type="button"
-        >
-          {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
-        </button>
+        <div className="ss-theme-picker" role="radiogroup" aria-label="Theme">
+          {THEMES.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              role="radio"
+              aria-checked={theme === t.id}
+              className={`ss-theme-swatch${theme === t.id ? " is-active" : ""}`}
+              onClick={() => setTheme(t.id)}
+              title={t.label}
+              style={{
+                background: `linear-gradient(135deg, ${t.swatch[0]} 0%, ${t.swatch[0]} 50%, ${t.swatch[1]} 50%, ${t.swatch[1]} 100%)`,
+              }}
+            >
+              <span className="ss-sr">{t.label}</span>
+            </button>
+          ))}
+        </div>
       </header>
 
 

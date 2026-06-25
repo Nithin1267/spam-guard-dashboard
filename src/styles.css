@@ -883,23 +883,17 @@ body {
     0 0 0 1px rgba(15, 23, 42, 0.04) inset;
   --ss-glow-accent: 0 0 30px -10px rgba(2, 132, 199, 0.4);
 }
-[data-ss-theme="light"] {
-  --ss-bg: #fdf2f8;
-  --ss-bg-2: #ede9fe;
-}
 [data-ss-theme="light"] .ss-bg {
   background:
-    radial-gradient(1100px 700px at 85% -10%, rgba(221, 214, 254, 0.85), transparent 60%),
-    radial-gradient(900px 600px at -10% 20%, rgba(251, 207, 232, 0.75), transparent 60%),
-    radial-gradient(700px 500px at 50% 110%, rgba(233, 213, 255, 0.55), transparent 60%),
-    linear-gradient(180deg, #fdf2f8 0%, #ede9fe 100%);
+    radial-gradient(900px 600px at 85% -10%, rgba(186, 230, 253, 0.7), transparent 60%),
+    radial-gradient(800px 500px at -10% 20%, rgba(199, 210, 254, 0.6), transparent 60%),
+    linear-gradient(180deg, #F8FAFC 0%, #EEF2F7 100%);
 }
 [data-ss-theme="light"] .ss-bg-grid {
   background-image:
-    linear-gradient(rgba(124, 58, 237, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(124, 58, 237, 0.06) 1px, transparent 1px);
+    linear-gradient(rgba(15, 23, 42, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.05) 1px, transparent 1px);
 }
-
 [data-ss-theme="light"] .ss-textarea {
   background: #FFFFFF;
   color: var(--ss-text);
@@ -909,6 +903,144 @@ body {
 [data-ss-theme="light"] .ss-breakdown,
 [data-ss-theme="light"] .ss-total {
   background: #FFFFFF;
+}
+
+/* ============================ Ocean (dark) ============================ */
+[data-ss-theme="ocean"] {
+  --ss-bg: #031b2e;
+  --ss-bg-2: #052943;
+  --ss-surface: #0a3553;
+  --ss-surface-2: #114668;
+  --ss-border: rgba(125, 211, 252, 0.16);
+  --ss-border-2: rgba(125, 211, 252, 0.28);
+  --ss-text: #e0f2fe;
+  --ss-text-dim: #7dd3fc;
+  --ss-text-mute: #5b8db0;
+  --ss-accent: #22d3ee;
+  --ss-accent-2: #06b6d4;
+  --ss-glow-accent: 0 0 40px -10px rgba(34, 211, 238, 0.6);
+}
+[data-ss-theme="ocean"] .ss-bg {
+  background:
+    radial-gradient(1000px 700px at 80% -10%, rgba(34, 211, 238, 0.25), transparent 60%),
+    radial-gradient(900px 600px at -10% 30%, rgba(14, 165, 233, 0.28), transparent 60%),
+    linear-gradient(180deg, #021425 0%, #052943 100%);
+}
+
+/* ============================ Sunset (dark) ============================ */
+[data-ss-theme="sunset"] {
+  --ss-bg: #1a0b1f;
+  --ss-bg-2: #2a1230;
+  --ss-surface: #331640;
+  --ss-surface-2: #421d51;
+  --ss-border: rgba(255, 154, 122, 0.16);
+  --ss-border-2: rgba(255, 154, 122, 0.3);
+  --ss-text: #fff1e6;
+  --ss-text-dim: #f4b8a0;
+  --ss-text-mute: #b08b85;
+  --ss-accent: #ff7a59;
+  --ss-accent-2: #f43f5e;
+  --ss-glow-accent: 0 0 40px -10px rgba(255, 122, 89, 0.55);
+}
+[data-ss-theme="sunset"] .ss-bg {
+  background:
+    radial-gradient(1000px 700px at 85% -10%, rgba(244, 63, 94, 0.28), transparent 60%),
+    radial-gradient(900px 600px at -10% 40%, rgba(255, 122, 89, 0.3), transparent 60%),
+    linear-gradient(180deg, #15081a 0%, #2a1230 100%);
+}
+
+/* ============================ Forest (dark) ============================ */
+[data-ss-theme="forest"] {
+  --ss-bg: #06140f;
+  --ss-bg-2: #0c2118;
+  --ss-surface: #112d22;
+  --ss-surface-2: #173b2d;
+  --ss-border: rgba(74, 222, 128, 0.16);
+  --ss-border-2: rgba(74, 222, 128, 0.3);
+  --ss-text: #dcfce7;
+  --ss-text-dim: #86efac;
+  --ss-text-mute: #5f8a76;
+  --ss-accent: #4ade80;
+  --ss-accent-2: #10b981;
+  --ss-glow-accent: 0 0 40px -10px rgba(74, 222, 128, 0.55);
+}
+[data-ss-theme="forest"] .ss-bg {
+  background:
+    radial-gradient(1000px 700px at 85% -10%, rgba(16, 185, 129, 0.25), transparent 60%),
+    radial-gradient(900px 600px at -10% 40%, rgba(74, 222, 128, 0.22), transparent 60%),
+    linear-gradient(180deg, #040f0b 0%, #0c2118 100%);
+}
+
+/* ============================ Rose (light) ============================ */
+[data-ss-theme="rose"] {
+  --ss-bg: #fdf2f8;
+  --ss-bg-2: #ede9fe;
+  --ss-surface: #ffffff;
+  --ss-surface-2: #faf5ff;
+  --ss-border: rgba(124, 58, 237, 0.14);
+  --ss-border-2: rgba(124, 58, 237, 0.24);
+  --ss-text: #3b0764;
+  --ss-text-dim: #6b21a8;
+  --ss-text-mute: #9333ea;
+  --ss-accent: #c026d3;
+  --ss-accent-2: #db2777;
+  --ss-shadow: 0 10px 30px -12px rgba(124, 58, 237, 0.2),
+    0 0 0 1px rgba(124, 58, 237, 0.05) inset;
+  --ss-glow-accent: 0 0 30px -10px rgba(192, 38, 211, 0.45);
+}
+[data-ss-theme="rose"] .ss-bg {
+  background:
+    radial-gradient(1100px 700px at 85% -10%, rgba(221, 214, 254, 0.85), transparent 60%),
+    radial-gradient(900px 600px at -10% 20%, rgba(251, 207, 232, 0.75), transparent 60%),
+    radial-gradient(700px 500px at 50% 110%, rgba(233, 213, 255, 0.55), transparent 60%),
+    linear-gradient(180deg, #fdf2f8 0%, #ede9fe 100%);
+}
+[data-ss-theme="rose"] .ss-bg-grid {
+  background-image:
+    linear-gradient(rgba(124, 58, 237, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124, 58, 237, 0.06) 1px, transparent 1px);
+}
+[data-ss-theme="rose"] .ss-textarea,
+[data-ss-theme="rose"] .ss-highlighted,
+[data-ss-theme="rose"] .ss-list-item,
+[data-ss-theme="rose"] .ss-breakdown,
+[data-ss-theme="rose"] .ss-total {
+  background: #ffffff;
+}
+
+/* ============================ Theme picker ============================ */
+.ss-theme-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--ss-border);
+  background: var(--ss-surface);
+}
+.ss-theme-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.18s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.25);
+}
+.ss-theme-swatch:hover {
+  transform: scale(1.12);
+}
+.ss-theme-swatch.is-active {
+  border-color: var(--ss-accent);
+  box-shadow: 0 0 0 2px var(--ss-accent), 0 0 12px -2px var(--ss-accent);
+}
+.ss-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
 }
 
 /* Theme toggle button */
