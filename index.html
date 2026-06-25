@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SpamSense – Client-Side Email Spam Classifier</title>
+<meta name="description" content="SpamSense is a fast, private, client-side email spam classifier. Analyze emails directly in your browser — no backend, no tracking." />
+<style>
+:root{
+  --bg:#0b1020;--bg-2:#0f1730;--surface:rgba(255,255,255,.04);--surface-2:rgba(255,255,255,.07);
+  --border:rgba(255,255,255,.1);--text:#e6ecff;--muted:#94a3c4;
+  --accent:#38bdf8;--accent-2:#818cf8;--safe:#22c55e;--warn:#f59e0b;--danger:#ef4444;
+  --shadow:0 20px 60px -20px rgba(0,0,0,.55); color-scheme:dark;
+}
+[data-theme="light"]{
+  --bg:#f6f7fb;--bg-2:#eef1f9;--surface:rgba(255,255,255,.85);--surface-2:rgba(255,255,255,.95);
+  --border:rgba(15,23,42,.08);--text:#0f172a;--muted:#5b6378;
+  --shadow:0 20px 60px -25px rgba(15,23,42,.25); color-scheme:light;
+}
+[data-accent="violet"]{--accent:#a78bfa;--accent-2:#f472b6;}
+[data-accent="emerald"]{--accent:#34d399;--accent-2:#22d3ee;}
+[data-accent="sunset"]{--accent:#fb923c;--accent-2:#f43f5e;}
+[data-accent="rose"]{--accent:#f472b6;--accent-2:#c084fc;}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Inter,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(900px 600px at 10% -10%,color-mix(in oklab,var(--accent) 25%,transparent),transparent 60%),
+    radial-gradient(800px 500px at 110% 10%,color-mix(in oklab,var(--accent-2) 22%,transparent),transparent 60%),
+    linear-gradient(180deg,var(--bg),var(--bg-2));
+  background-attachment:fixed;transition:background .4s ease,color .25s ease;-webkit-font-smoothing:antialiased;
+}
+.app{min-height:100%;display:flex;flex-direction:column}
+.container{width:100%;max-width:1120px;margin:0 auto;padding:0 20px}
+
+.nav{position:sticky;top:0;z-index:20;backdrop-filter:blur(14px);background:color-mix(in oklab,var(--bg) 70%,transparent);border-bottom:1px solid var(--border)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 0;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.01em}
+.brand-logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#0b1020;font-weight:900;box-shadow:0 8px 24px -10px color-mix(in oklab,var(--accent) 60%,transparent)}
+.brand-name{font-size:1.05rem}
+.brand-sub{font-size:.72rem;color:var(--muted);margin-top:-2px}
+.nav-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.swatches{display:flex;gap:6px;padding:4px;background:var(--surface);border:1px solid var(--border);border-radius:999px}
+.swatch{width:22px;height:22px;border-radius:999px;border:2px solid transparent;cursor:pointer;transition:transform .2s ease,border-color .2s ease;padding:0}
+.swatch:hover{transform:scale(1.1)}
+.swatch.active{border-color:var(--text)}
+.icon-btn{width:38px;height:38px;display:grid;place-items:center;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-size:1rem;transition:transform .2s ease,background .2s ease}
+.icon-btn:hover{transform:translateY(-1px);background:var(--surface-2)}
+
+.hero{padding:56px 0 24px;text-align:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:.78rem}
+.eyebrow .dot{width:8px;height:8px;border-radius:999px;background:var(--safe);box-shadow:0 0 12px var(--safe)}
+.hero h1{font-size:clamp(2rem,4.6vw,3.4rem);margin:18px 0 10px;letter-spacing:-.02em;line-height:1.05}
+.gradient-text{background:linear-gradient(135deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--muted);max-width:640px;margin:0 auto}
+
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:28px 0 8px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:var(--shadow);transition:transform .25s ease,background .25s ease}
+.stat:hover{transform:translateY(-3px);background:var(--surface-2)}
+.stat-label{color:var(--muted);font-size:.8rem}
+.stat-value{font-size:1.8rem;font-weight:800;margin-top:6px;letter-spacing:-.02em}
+.stat .pill{display:inline-block;margin-top:8px;font-size:.7rem;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--muted)}
+.stat.spam .stat-value{color:var(--danger)}
+.stat.safe .stat-value{color:var(--safe)}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:var(--shadow)}
+.card h2{margin:0 0 4px;font-size:1.1rem}
+.card .sub{color:var(--muted);font-size:.85rem;margin-bottom:14px}
+
+.samples{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.chip{padding:7px 12px;border-radius:999px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:.8rem;cursor:pointer;transition:transform .15s ease,background .2s ease;font-family:inherit}
+.chip:hover{transform:translateY(-1px);background:color-mix(in oklab,var(--accent) 18%,var(--surface-2))}
+
+textarea.input{width:100%;min-height:180px;resize:vertical;background:color-mix(in oklab,var(--bg) 55%,transparent);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:14px;font:inherit;line-height:1.5;outline:none;transition:border-color .2s ease,box-shadow .2s ease}
+textarea.input:focus{border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in oklab,var(--accent) 25%,transparent)}
+.input-meta{display:flex;justify-content:space-between;color:var(--muted);font-size:.78rem;margin-top:6px}
+
+.actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:12px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer;font-weight:600;font-family:inherit;font-size:.92rem;transition:transform .18s ease,background .2s ease,box-shadow .2s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#0b1020;border-color:transparent;box-shadow:0 10px 30px -12px color-mix(in oklab,var(--accent) 60%,transparent)}
+.btn.primary:hover{box-shadow:0 14px 38px -14px color-mix(in oklab,var(--accent) 70%,transparent)}
+.btn.ghost{background:transparent}
+
+.result{margin-top:18px;border-radius:14px;padding:16px;border:1px solid var(--border);background:var(--surface-2);animation:fadeUp .35s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.result-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.verdict{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;font-weight:700}
+.verdict.spam{background:color-mix(in oklab,var(--danger) 18%,transparent);color:var(--danger)}
+.verdict.safe{background:color-mix(in oklab,var(--safe) 18%,transparent);color:var(--safe)}
+.risk{font-size:.8rem;color:var(--muted)}
+.risk b.low{color:var(--safe)} .risk b.medium{color:var(--warn)} .risk b.high{color:var(--danger)}
+.meter{margin-top:12px;height:10px;border-radius:999px;background:color-mix(in oklab,var(--bg) 70%,transparent);overflow:hidden;border:1px solid var(--border)}
+.meter>span{display:block;height:100%;border-radius:999px;transition:width .7s cubic-bezier(.2,.8,.2,1)}
+.meter.spam>span{background:linear-gradient(90deg,var(--warn),var(--danger))}
+.meter.safe>span{background:linear-gradient(90deg,var(--accent),var(--safe))}
+.keywords{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.kw{padding:4px 10px;border-radius:999px;background:color-mix(in oklab,var(--danger) 18%,transparent);color:var(--danger);font-size:.78rem;font-weight:600}
+.kw.empty{background:color-mix(in oklab,var(--safe) 16%,transparent);color:var(--safe)}
+
+.grid-2{display:grid;grid-template-columns:1.4fr 1fr;gap:18px;margin-top:22px}
+@media(max-width:880px){.grid-2{grid-template-columns:1fr}.stats{grid-template-columns:1fr}}
+
+.history-list{display:flex;flex-direction:column;gap:10px;max-height:460px;overflow:auto;padding-right:4px}
+.history-item{padding:12px;border-radius:12px;border:1px solid var(--border);background:color-mix(in oklab,var(--bg) 40%,transparent);display:flex;justify-content:space-between;gap:10px;align-items:center;transition:transform .18s ease,background .2s ease}
+.history-item:hover{transform:translateY(-1px);background:var(--surface-2)}
+.history-snippet{color:var(--muted);font-size:.82rem;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.history-meta{text-align:right;font-size:.75rem;color:var(--muted);white-space:nowrap}
+.history-meta b.spam{color:var(--danger)} .history-meta b.safe{color:var(--safe)}
+.empty-state{color:var(--muted);font-size:.88rem;text-align:center;padding:28px 0}
+
+.about{margin-top:28px}
+.about-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:14px}
+@media(max-width:880px){.about-grid{grid-template-columns:1fr}}
+.about-card{padding:16px;border-radius:14px;background:var(--surface);border:1px solid var(--border);transition:transform .2s ease}
+.about-card:hover{transform:translateY(-3px)}
+.about-card h3{margin:8px 0 4px;font-size:1rem}
+.about-card p{margin:0;color:var(--muted);font-size:.86rem}
+.about-card .ico{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#0b1020;font-weight:800}
+
+footer.foot{margin-top:48px;padding:28px 0;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:.86rem;background:color-mix(in oklab,var(--bg) 60%,transparent)}
+footer.foot b{color:var(--text)} footer.foot .row{margin:4px 0}
+.history-list::-webkit-scrollbar{width:8px}
+.history-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:999px}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="nav">
+    <div class="container nav-inner">
+      <div class="brand">
+        <div class="brand-logo">S</div>
+        <div>
+          <div class="brand-name">SpamSense</div>
+          <div class="brand-sub">Client-Side Spam Classifier</div>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <div class="swatches" id="swatches" role="group" aria-label="Accent color"></div>
+        <button class="icon-btn" id="themeToggle" aria-label="Toggle theme" title="Toggle dark/light">☾</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="flex:1">
+    <section class="hero">
+      <span class="eyebrow"><span class="dot"></span> 100% On-device · No data leaves your browser</span>
+      <h1>Detect spam emails with <span class="gradient-text">SpamSense</span></h1>
+      <p>A fast, private spam classifier powered by weighted keyword scoring and heuristic rules — all running locally in your browser.</p>
+    </section>
+
+    <section class="stats" aria-label="Stats">
+      <div class="stat"><div class="stat-label">Total Emails Checked</div><div class="stat-value" id="statTotal">0</div><span class="pill">All-time</span></div>
+      <div class="stat spam"><div class="stat-label">Spam Detected</div><div class="stat-value" id="statSpam">0</div><span class="pill">Flagged as spam</span></div>
+      <div class="stat safe"><div class="stat-label">Safe Emails</div><div class="stat-value" id="statSafe">0</div><span class="pill">Looks clean</span></div>
+    </section>
+
+    <section class="grid-2">
+      <div class="card">
+        <h2>Analyze an Email</h2>
+        <div class="sub">Paste an email or try a sample below.</div>
+        <div class="samples" id="samples"></div>
+        <textarea class="input" id="email" placeholder="Paste email content here…"></textarea>
+        <div class="input-meta"><span id="charCount">0 characters</span><span id="wordCount">0 words</span></div>
+        <div class="actions">
+          <button class="btn primary" id="analyzeBtn" disabled>Check Spam</button>
+          <button class="btn ghost" id="resetBtn">Reset</button>
+        </div>
+        <div id="resultWrap"></div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><h2>Recent History</h2><div class="sub">Stored locally in your browser.</div></div>
+          <button class="btn ghost" id="clearHistory" style="padding:8px 12px;display:none">Clear</button>
+        </div>
+        <div id="historyWrap"><div class="empty-state">No analyses yet. Run one to see it here.</div></div>
+      </div>
+    </section>
+
+    <section class="about">
+      <div class="card">
+        <h2>About SpamSense</h2>
+        <div class="sub">How the detection works under the hood.</div>
+        <div class="about-grid">
+          <div class="about-card"><div class="ico">1</div><h3>Keyword Scoring</h3><p>Each email is scanned for known spam phrases. Every match adds a weighted score based on how strong a signal it is.</p></div>
+          <div class="about-card"><div class="ico">2</div><h3>Heuristic Rules</h3><p>SpamSense also checks for excessive ALL-CAPS, multiple exclamation marks, and suspicious links to boost the score.</p></div>
+          <div class="about-card"><div class="ico">3</div><h3>Verdict &amp; Risk</h3><p>The combined score is normalized to a 0–100% confidence, then mapped to a verdict (Spam/Safe) and risk level (Low/Medium/High).</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="container">
+      <div class="row"><b>SpamSense</b></div>
+      <div class="row">Client-Side Email Spam Classifier</div>
+      <div class="row">Built with HTML, CSS &amp; JavaScript</div>
+      <div class="row">Designed &amp; Developed by <b>Nithin Kumar</b></div>
+      <div class="row">© 2026 All Rights Reserved</div>
+    </div>
+  </footer>
+</div>
+
+<script>
+const SPAM_KEYWORDS=[
+  ["free",2],["winner",3],["win",2],["won",2],["prize",3],["lottery",4],["jackpot",4],["claim",2],
+  ["urgent",3],["act now",3],["limited time",2],["click here",3],["verify your account",4],["password",2],
+  ["bitcoin",3],["crypto",2],["investment",2],["guaranteed",2],["risk-free",3],["cash",2],["credit",2],
+  ["loan",2],["offer",1],["discount",1],["buy now",2],["subscribe",1],["unsubscribe",1],["viagra",5],
+  ["earn money",3],["work from home",2],["congratulations",2],["selected",1],["exclusive",1],["gift card",3]
+].map(([word,weight])=>({word,weight}));
+
+const SAMPLES={
+  "Obvious Spam":"CONGRATULATIONS!!! You are the WINNER of a $1,000,000 lottery jackpot. Claim your prize NOW — click here to verify your account. Act now, limited time offer! Risk-free guaranteed cash.",
+  "Promotion":"Hi there! Don't miss our exclusive 50% discount this weekend. Subscribe today to grab the offer and get a free gift card with every purchase. Buy now before stock runs out!",
+  "Safe Email":"Hi Nithin, just confirming our meeting tomorrow at 10am to discuss the project roadmap. Let me know if you'd like to reschedule. Thanks, Priya.",
+  "College Notice":"Dear Students, the semester examinations will begin from Monday, December 15th. Please collect your hall tickets from the academic office by Friday. Regards, Examination Cell."
+};
+
+const ACCENTS=[{id:"sky",color:"#38bdf8"},{id:"violet",color:"#a78bfa"},{id:"emerald",color:"#34d399"},{id:"sunset",color:"#fb923c"},{id:"rose",color:"#f472b6"}];
+const STORAGE_KEY="spamsense.history.v1";
+const PREFS_KEY="spamsense.prefs.v1";
+
+function analyze(text){
+  const lower=text.toLowerCase();
+  let score=0; const matched=[];
+  for(const k of SPAM_KEYWORDS){ if(lower.includes(k.word)){ matched.push(k.word); score+=k.weight; } }
+  const letters=text.replace(/[^a-zA-Z]/g,"");
+  const capsRatio=letters.length?letters.replace(/[^A-Z]/g,"").length/letters.length:0;
+  if(capsRatio>0.35 && letters.length>20) score+=3;
+  const exclam=(text.match(/!/g)||[]).length;
+  if(exclam>=3) score+=Math.min(exclam,6);
+  const links=(text.match(/https?:\/\/|www\./gi)||[]).length;
+  if(links>0) score+=Math.min(links*2,6);
+  const confidence=Math.min(100,Math.round((score/30)*100));
+  const verdict=confidence>=50?"Spam":"Safe";
+  const risk=confidence>=70?"High":confidence>=40?"Medium":"Low";
+  return {verdict,confidence,risk,keywords:matched};
+}
+
+// State
+let history=[];
+let prefs={theme:"dark",accent:"sky"};
+try{
+  const h=localStorage.getItem(STORAGE_KEY);
+  if(h){ const p=JSON.parse(h); if(Array.isArray(p)) history=p.filter(x=>x&&x.result&&typeof x.result.verdict==="string"); }
+  const pf=localStorage.getItem(PREFS_KEY);
+  if(pf) prefs={...prefs,...JSON.parse(pf)};
+}catch(_){}
+
+// Elements
+const $=(id)=>document.getElementById(id);
+const email=$("email"), analyzeBtn=$("analyzeBtn"), resetBtn=$("resetBtn");
+const resultWrap=$("resultWrap"), historyWrap=$("historyWrap"), clearHistory=$("clearHistory");
+
+// Theme
+function applyPrefs(){
+  document.documentElement.setAttribute("data-theme",prefs.theme);
+  if(prefs.accent==="sky") document.documentElement.removeAttribute("data-accent");
+  else document.documentElement.setAttribute("data-accent",prefs.accent);
+  $("themeToggle").textContent = prefs.theme==="dark" ? "☀" : "☾";
+  localStorage.setItem(PREFS_KEY,JSON.stringify(prefs));
+  renderSwatches();
+}
+function renderSwatches(){
+  const c=$("swatches"); c.innerHTML="";
+  for(const a of ACCENTS){
+    const b=document.createElement("button");
+    b.className="swatch"+(prefs.accent===a.id?" active":"");
+    b.style.background=a.color; b.setAttribute("aria-label","Accent "+a.id);
+    b.onclick=()=>{ prefs.accent=a.id; applyPrefs(); };
+    c.appendChild(b);
+  }
+}
+$("themeToggle").onclick=()=>{ prefs.theme=prefs.theme==="dark"?"light":"dark"; applyPrefs(); };
+
+// Samples
+const samplesEl=$("samples");
+for(const k of Object.keys(SAMPLES)){
+  const b=document.createElement("button"); b.className="chip"; b.textContent=k;
+  b.onclick=()=>{ email.value=SAMPLES[k]; onInput(); };
+  samplesEl.appendChild(b);
+}
+
+// Stats / history render
+function renderStats(){
+  $("statTotal").textContent=history.length;
+  const spam=history.filter(h=>h.result.verdict==="Spam").length;
+  $("statSpam").textContent=spam;
+  $("statSafe").textContent=history.length-spam;
+}
+function renderHistory(){
+  if(history.length===0){
+    historyWrap.innerHTML='<div class="empty-state">No analyses yet. Run one to see it here.</div>';
+    clearHistory.style.display="none"; return;
+  }
+  clearHistory.style.display="";
+  const list=document.createElement("div"); list.className="history-list";
+  for(const h of history){
+    const row=document.createElement("div"); row.className="history-item";
+    const left=document.createElement("div"); left.style.minWidth="0"; left.style.flex="1";
+    const snip=document.createElement("div"); snip.className="history-snippet"; snip.textContent=h.text;
+    const when=document.createElement("div"); when.style.cssText="font-size:.72rem;color:var(--muted);margin-top:4px";
+    when.textContent=new Date(h.at).toLocaleString();
+    left.appendChild(snip); left.appendChild(when);
+    const meta=document.createElement("div"); meta.className="history-meta";
+    meta.innerHTML='<b class="'+(h.result.verdict==="Spam"?"spam":"safe")+'">'+h.result.verdict+'</b><div>'+h.result.confidence+'% · '+h.result.risk+'</div>';
+    row.appendChild(left); row.appendChild(meta); list.appendChild(row);
+  }
+  historyWrap.innerHTML=""; historyWrap.appendChild(list);
+}
+function renderResult(r){
+  if(!r){ resultWrap.innerHTML=""; return; }
+  const verdictCls=r.verdict==="Spam"?"spam":"safe";
+  const icon=r.verdict==="Spam"?"⚠ Spam":"✓ Safe";
+  const kws=r.keywords.length===0
+    ? '<span class="kw empty">No suspicious keywords detected</span>'
+    : r.keywords.map(k=>'<span class="kw">'+k+'</span>').join("");
+  resultWrap.innerHTML =
+    '<div class="result">'+
+      '<div class="result-head">'+
+        '<span class="verdict '+verdictCls+'">'+icon+' · '+r.confidence+'%</span>'+
+        '<span class="risk">Risk Level: <b class="'+r.risk.toLowerCase()+'">'+r.risk+'</b></span>'+
+      '</div>'+
+      '<div class="meter '+verdictCls+'"><span style="width:0%"></span></div>'+
+      '<div class="keywords">'+kws+'</div>'+
+    '</div>';
+  requestAnimationFrame(()=>{ const bar=resultWrap.querySelector(".meter>span"); if(bar) bar.style.width=r.confidence+"%"; });
+}
+
+function onInput(){
+  const t=email.value;
+  $("charCount").textContent=t.length+" characters";
+  $("wordCount").textContent=(t.trim()?t.trim().split(/\s+/).length:0)+" words";
+  analyzeBtn.disabled=!t.trim();
+}
+email.addEventListener("input",onInput);
+
+analyzeBtn.onclick=()=>{
+  const t=email.value.trim(); if(!t) return;
+  const r=analyze(t); renderResult(r);
+  const item={id:(crypto.randomUUID?crypto.randomUUID():String(Date.now())),text:t,result:r,at:Date.now()};
+  history=[item,...history].slice(0,25);
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(history));
+  renderStats(); renderHistory();
+};
+resetBtn.onclick=()=>{ email.value=""; onInput(); renderResult(null); };
+clearHistory.onclick=()=>{ history=[]; localStorage.removeItem(STORAGE_KEY); renderStats(); renderHistory(); };
+
+// Init
+applyPrefs(); renderStats(); renderHistory(); onInput();
+</script>
+</body>
+</html>
