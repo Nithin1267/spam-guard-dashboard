@@ -136,9 +136,12 @@ body {
 
 .ss-brand {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
+  text-align: center;
+  gap: 10px;
 }
+
 
 .ss-logo {
   width: 38px;
