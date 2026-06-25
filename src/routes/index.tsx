@@ -242,8 +242,8 @@ function Index() {
             <div className="ss-brand-sub">Client-side email classifier</div>
           </div>
         </div>
-        </div>
       </header>
+
 
 
       <main className="ss-main">
