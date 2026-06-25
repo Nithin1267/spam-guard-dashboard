@@ -1291,3 +1291,66 @@ body {
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
+/* ============================= About Section ============================= */
+.ss-about {
+  margin-top: 28px;
+}
+.ss-about-lead {
+  margin: 0 0 22px;
+  color: var(--ss-text-dim);
+  font-size: 14.5px;
+  line-height: 1.65;
+  max-width: 72ch;
+}
+.ss-about-lead strong {
+  color: var(--ss-text);
+  font-weight: 600;
+}
+.ss-about-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.ss-about-step {
+  position: relative;
+  padding: 18px 18px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--ss-border);
+  background: color-mix(in oklab, var(--ss-bg) 55%, transparent);
+  transition: transform 0.18s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.ss-about-step:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in oklab, var(--ss-accent) 50%, var(--ss-border));
+  background: color-mix(in oklab, var(--ss-accent) 6%, var(--ss-bg));
+}
+.ss-about-num {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 13px;
+  color: #0b1220;
+  background: linear-gradient(135deg, var(--ss-accent), var(--ss-accent-2));
+  box-shadow: var(--ss-glow-accent);
+  margin-bottom: 10px;
+}
+.ss-about-step h3 {
+  margin: 0 0 6px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ss-text);
+  letter-spacing: -0.01em;
+}
+.ss-about-step p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ss-text-dim);
+}
+@media (max-width: 720px) {
+  .ss-about-grid { grid-template-columns: 1fr; }
+}
