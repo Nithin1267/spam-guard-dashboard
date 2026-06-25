@@ -171,7 +171,7 @@ type HistoryItem = {
   id: string;
   ts: number;
   preview: string;
-  verdict: "spam" | "safe";
+  verdict: Verdict;
   probability: number;
 };
 
