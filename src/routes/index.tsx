@@ -313,6 +313,22 @@ function Index() {
             <h2>Analyze an Email</h2>
             <span className="ss-count">{text.length} characters</span>
           </div>
+          <div className="ss-samples">
+            <span className="ss-samples-label">Try a sample:</span>
+            {SAMPLE_EMAILS.map((s) => (
+              <button
+                key={s.label}
+                className={`ss-sample ss-sample-${s.tone}`}
+                onClick={() => {
+                  setText(s.text);
+                  setResult(null);
+                }}
+                type="button"
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
           <textarea
             className="ss-textarea"
             placeholder="Paste the email subject and body here to check whether it is spam or safe..."
@@ -344,6 +360,7 @@ function Index() {
             locally in your browser.
           </p>
         </section>
+
 
 
         {result && (
