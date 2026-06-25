@@ -452,6 +452,34 @@ body {
 .ss-meter-safe {
   background: linear-gradient(90deg, #22d3ee, var(--ss-success));
 }
+.ss-meter-suspicious {
+  background: linear-gradient(90deg, #fbbf24, #f97316);
+}
+.ss-verdict-suspicious {
+  color: var(--ss-warn);
+  background: rgba(251, 191, 36, 0.1);
+  border-color: rgba(251, 191, 36, 0.35);
+  box-shadow: 0 0 40px -10px rgba(251, 191, 36, 0.5);
+}
+.ss-verdict-suspicious .ss-verdict-dot {
+  background: var(--ss-warn);
+  box-shadow: 0 0 12px var(--ss-warn);
+}
+.ss-badge-suspicious {
+  background: rgba(251, 191, 36, 0.15);
+  color: var(--ss-warn);
+  border: 1px solid rgba(251, 191, 36, 0.35);
+}
+.ss-privacy {
+  margin: 14px 0 0;
+  font-size: 12px;
+  color: var(--ss-text-mute);
+  text-align: center;
+  padding: 10px 14px;
+  background: rgba(56, 189, 248, 0.05);
+  border: 1px solid rgba(56, 189, 248, 0.15);
+  border-radius: var(--ss-radius-sm);
+}
 
 .ss-section-label {
   font-size: 11px;
