@@ -605,7 +605,57 @@ function Index() {
           )}
         </section>
 
+        <section className="ss-card ss-about" id="how-it-works">
+          <div className="ss-card-head">
+            <h2>How It Works</h2>
+            <span className="ss-card-sub">A transparent look under the hood</span>
+          </div>
+
+          <p className="ss-about-lead">
+            SpamSense classifies emails using a combination of <strong>keyword analysis</strong>,
+            <strong> heuristic rules</strong>, and <strong>text pattern detection</strong> — all
+            running locally in your browser. Nothing is uploaded, stored remotely, or shared with
+            any server.
+          </p>
+
+          <div className="ss-about-grid">
+            <div className="ss-about-step">
+              <div className="ss-about-num">1</div>
+              <h3>Keyword Scoring</h3>
+              <p>
+                Each known spam phrase carries a weight. Matches accumulate into a raw spam score
+                that reflects how aggressive the email's language is.
+              </p>
+            </div>
+            <div className="ss-about-step">
+              <div className="ss-about-num">2</div>
+              <h3>Heuristic Rules</h3>
+              <p>
+                Excessive capital letters, too many links, and urgent calls-to-action add
+                additional risk signals on top of the keyword score.
+              </p>
+            </div>
+            <div className="ss-about-step">
+              <div className="ss-about-num">3</div>
+              <h3>Probability &amp; Verdict</h3>
+              <p>
+                Scores are normalized into a 0–100% probability and bucketed into
+                <em> Safe</em>, <em>Suspicious</em>, or <em>Spam</em> so the result is easy to act on.
+              </p>
+            </div>
+            <div className="ss-about-step">
+              <div className="ss-about-num">4</div>
+              <h3>Private by Design</h3>
+              <p>
+                Everything — analysis, history, exports — happens in your browser. Your email
+                content never leaves your device.
+              </p>
+            </div>
+          </div>
+        </section>
+
       </main>
+
 
       <footer className="ss-footer">
         <div className="ss-footer-cta">
