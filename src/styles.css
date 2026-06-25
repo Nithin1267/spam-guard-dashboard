@@ -126,21 +126,22 @@ body {
   margin: 0 auto;
   padding: 24px 28px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  text-align: center;
+  justify-content: space-between;
   gap: 16px;
 }
 
 
+
 .ss-brand {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  text-align: center;
-  gap: 10px;
+  text-align: left;
+  gap: 12px;
 }
+
 
 
 .ss-logo {
