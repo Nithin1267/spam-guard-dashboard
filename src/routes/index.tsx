@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
+import cyberBg from "@/assets/cyber-bg.png.asset.json";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -647,9 +649,15 @@ function StatCard({
 function BackgroundFX() {
   return (
     <div className="ss-bg" aria-hidden>
+      <div
+        className="ss-bg-image"
+        style={{ backgroundImage: `url(${cyberBg.url})` }}
+      />
+      <div className="ss-bg-veil" />
       <div className="ss-bg-orb ss-bg-orb-1" />
       <div className="ss-bg-orb ss-bg-orb-2" />
       <div className="ss-bg-grid" />
     </div>
   );
 }
+

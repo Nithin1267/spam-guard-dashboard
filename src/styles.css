@@ -59,26 +59,33 @@ body {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(
-      1200px 800px at 80% -10%,
-      rgba(124, 92, 255, 0.18),
-      transparent 60%
-    ),
-    radial-gradient(
-      900px 600px at -10% 30%,
-      rgba(34, 211, 238, 0.12),
-      transparent 60%
-    ),
-    linear-gradient(180deg, var(--ss-bg) 0%, var(--ss-bg-2) 100%);
+  background: #050505;
+}
+
+.ss-bg-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.9;
+}
+
+.ss-bg-veil {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1200px 800px at 50% 110%, rgba(0, 0, 0, 0.75), transparent 70%),
+    linear-gradient(180deg, rgba(5, 5, 5, 0.35) 0%, rgba(5, 5, 5, 0.65) 100%);
 }
 
 .ss-bg-grid {
   position: absolute;
   inset: 0;
-  background-image: linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-image: linear-gradient(rgba(251, 146, 60, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(251, 146, 60, 0.05) 1px, transparent 1px);
   background-size: 40px 40px;
-  mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
 }
 
 .ss-bg-orb {
@@ -86,18 +93,19 @@ body {
   width: 480px;
   height: 480px;
   border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.5;
+  filter: blur(90px);
+  opacity: 0.35;
   animation: ss-float 14s ease-in-out infinite;
 }
 .ss-bg-orb-1 {
-  background: radial-gradient(circle, #7c5cff 0%, transparent 70%);
+  background: radial-gradient(circle, #fb923c 0%, transparent 70%);
   top: -120px;
   right: -80px;
 }
 .ss-bg-orb-2 {
-  background: radial-gradient(circle, #22d3ee 0%, transparent 70%);
+  background: radial-gradient(circle, #f97316 0%, transparent 70%);
   bottom: -160px;
+
   left: -120px;
   animation-delay: -6s;
 }
