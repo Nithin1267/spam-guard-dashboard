@@ -148,7 +148,8 @@ function analyze(text: string): Analysis {
   const heuristicScore = heuristics.reduce((s, h) => s + h.points, 0);
   const totalScore = keywordScore + heuristicScore;
   const probability = Math.max(0, Math.min(100, Math.round((totalScore / SCORE_NORMALIZER) * 100)));
-  const verdict: "spam" | "safe" = probability >= 50 ? "spam" : "safe";
+  const verdict: Verdict =
+    probability >= 71 ? "spam" : probability >= 41 ? "suspicious" : "safe";
 
   return {
     verdict,
